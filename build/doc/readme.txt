@@ -1,4 +1,4 @@
-﻿nMSXTiles v0.9.0
+﻿nMSXTiles v0.9.1
 ================
 
 nMSXTiles v0.8.2
