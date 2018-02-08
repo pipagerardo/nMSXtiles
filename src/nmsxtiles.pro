@@ -12,8 +12,11 @@ TARGET = nMSXtiles
 #--------------------------------------------------------------------------------
 # VERSION Specifies the version number of the application or library.
 #--------------------------------------------------------------------------------
-win32:VERSION = 0.9.0.0  # major.minor.patch.build
-else:VERSION  = 0.9.0    # major.minor.patch
+DEFINES += VER_NMSXTILES_MAJOR=0
+DEFINES += VER_NMSXTILES_MINOR=9
+DEFINES += VER_NMSXTILES_PATCH=1
+win32:VERSION = 0.9.1.0             # major.minor.patch.build
+else:VERSION  = 0.9.1               # major.minor.patch
 
 #--------------------------------------------------------------------------------
 # TEMPLATE Specifies the name of the template to use when generating the project.
@@ -168,12 +171,13 @@ FORMS += \
 #--------------------------------------------------------------------------------
 RESOURCES += \
 	resources.qrc
+RC_ICONS = nMSXtiles.ico
 
 #--------------------------------------------------------------------------------
 # OTHER FILES:
 #--------------------------------------------------------------------------------
-# OTHER_FILES += \ 
-#    todo.txt
+OTHER_FILES += \
+    todo.txt
 
 #--------------------------------------------------------------------------------
 #                                   END

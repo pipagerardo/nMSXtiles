@@ -17,11 +17,9 @@ public:
 	QImage& get_Image();
 
 	void SetPixel( int x, int y, uint color );
-	
-private:
-	QImage m_Image;
-	
+
 protected:
+    QImage m_Image;
 	void mousePressEvent( QMouseEvent* );  
 	void mouseReleaseEvent( QMouseEvent* );
 	void mouseDoubleClickEvent( QMouseEvent* );
@@ -34,6 +32,15 @@ signals:
 	void onMouseMoveEvent( int x, int y );
 	void onReleasedLeft( int x, int y );
 	void onReleasedRight( int x, int y );
+};
+
+// Esta clase sirve para pintar con el boton pulsado...
+class CLabelBtnMove : public CLabelBtn {
+public:
+    CLabelBtnMove( QWidget *pParent, int w, int h )
+        : CLabelBtn( pParent, w, h ) {}
+protected:
+    void mouseMoveEvent( QMouseEvent *pEvent );
 };
 
 #endif

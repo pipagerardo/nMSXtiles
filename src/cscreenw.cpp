@@ -98,6 +98,8 @@ void CScreenW::Initialize()
 	pal.setColor( QPalette::Dark, Qt::green );
 	m_pLblSelection->setPalette( pal );
 
+
+
 	connect( m_pLblScreen, SIGNAL( onClickedLeft( int, int ) ), this, SLOT( OnScreenClickLeft( int, int ) ) );
 	connect( m_pLblScreen, SIGNAL( onReleasedLeft( int, int ) ), this, SLOT( OnScreenReleaseLeft( int, int ) ) );
 	connect( m_pLblScreen, SIGNAL( onReleasedRight( int, int ) ), this, SLOT( OnScreenReleaseRight( int, int ) ) );
@@ -161,8 +163,10 @@ void CScreenW::Initialize()
 
 	connect( m_pLblPalBack, SIGNAL( onClickedLeft( int, int ) ), this, SLOT( OnPalBackClick( int, int ) ) );
 	connect( m_pLblPalFore, SIGNAL( onClickedLeft( int, int ) ), this, SLOT( OnPalForeClick( int, int ) ) );
-	
-    m_pLblTile = new CLabelBtn( ui->m_pFrmTile, 96, 96 );
+
+//  m_pLblTile = new CLabelBtn( ui->m_pFrmTile, 96, 96 );
+//  Añadido para dibujar arrastrando...
+    m_pLblTile = new CLabelBtnMove( ui->m_pFrmTile, 96, 96 );
     m_pLblTile->setGeometry( 2, 2, ui->m_pFrmTile->width(), ui->m_pFrmTile->height() );
 	
 	connect( m_pLblTile, SIGNAL( onClickedLeft( int, int ) ), this, SLOT( OnTileClickLeft( int, int ) ) );
@@ -288,8 +292,8 @@ void CScreenW::Initialize()
 
     connect( ui->m_pChangeColors, SIGNAL( clicked() ), this, SLOT( OnChangeColors()));
 
-    m_CurrentScreen = 0;
-
+    // ???
+    // m_CurrentScreen = 0;
 
     // Añadido para poner tope a MultiScreen
     ui->m_pGrMapX->setMaximum( 0 );
@@ -563,7 +567,6 @@ void CScreenW::OnPalForeClick( int, int ) {
     SetTileDesign(); // AÑADIDO
 }
 
-
 void CScreenW::OnColorsClick( int x, int /*y*/ ) {
     int c, i;
 	c = x / 12;
@@ -636,7 +639,7 @@ void CScreenW::OnToBank() {
     if( ui->m_pGrOneBank->isChecked() ) {
 		m_Undo.clear();
 		m_Undo<<"TOBANK"<<"ALLBANKS"<<m_SelTile.x();
-		m_UndoTile = m_TilesBank[ m_SelTile.x() ] [0 ];
+        m_UndoTile = m_TilesBank[ m_SelTile.x() ][ 0 ];
 		m_TilesBank[ m_SelTile.x() ][ 0 ] = m_TileDesign;
 		m_TilesBank[ m_SelTile.x() ][ 1 ] = m_TileDesign;
 		m_TilesBank[ m_SelTile.x() ][ 2 ] = m_TileDesign;
@@ -650,17 +653,6 @@ void CScreenW::OnToBank() {
 	}
 }
 
-void CScreenW::OnScreenReleaseRight( int x, int y ) {
-	m_pLblSelection->setGeometry( 0, 0, 0, 0 );
-	m_ScreenSelection.clear();
-	x = x / 16;
-	y = y / 16;
-	m_Undo.clear();
-    m_Undo<<"SCREENCLICK"<<x<<y<<m_Screen[m_MapScreenX][m_MapScreenY][y*32+x];
-    m_Screen[m_MapScreenX][m_MapScreenY][y*32 + x] = GetBackgroundTile( y/8 );
-	UpdateScreen();
-}
-
 //TODO - 1 Deshabilitat. Per mes endavant.
 int CScreenW::GetBackgroundTile( int y ) {
     if( ui->m_pGrOneBank->isChecked() ) return ui->m_pGrBackgroundTiles0->currentText().toLongLong();
@@ -670,6 +662,18 @@ int CScreenW::GetBackgroundTile( int y ) {
         case 2: return ui->m_pGrBackgroundTiles2->currentText().toLongLong();
         default: Q_ASSERT( false ); return 0;
     }
+}
+
+// Borra con la baldosa de fondo...
+void CScreenW::OnScreenReleaseRight( int x, int y ) {
+    m_pLblSelection->setGeometry( 0, 0, 0, 0 );
+    m_ScreenSelection.clear();
+    x = x / 16;
+    y = y / 16;
+    m_Undo.clear();
+    m_Undo << "SCREENCLICK " << x << y << m_Screen[m_MapScreenX][m_MapScreenY][y*32+x];
+    m_Screen[m_MapScreenX][m_MapScreenY][y*32 + x] = GetBackgroundTile( y/8 );
+    UpdateScreen();
 }
 
 void CScreenW::OnScreenClickLeft( int x, int y ) {
@@ -690,52 +694,38 @@ void CScreenW::OnScreenReleaseLeft( int x, int y )
 	int xI, yI;
 	int xE, yE;
 	QList<int> r;
-
 	m_Selecting = false;
 	m_ScreenSelection.clear();
 	//TODO - 1 xI<xE yI < yE
-	if( m_LastClickPos.x() >= 0 && ( abs( m_LastClickPos.x() - x ) >= 8 || abs( m_LastClickPos.y() - y ) >= 8 ) )
-	{
+    if( m_LastClickPos.x() >= 0 && ( abs( m_LastClickPos.x() - x ) >= 8 || abs( m_LastClickPos.y() - y ) >= 8 ) ) {
 		xI = m_LastClickPos.x() / 16 * 16;
 		yI = m_LastClickPos.y() / 16 * 16;
 		xE = ( x / 16 * 16 );
 		yE = ( y / 16 * 16 );
-
-		if( xI > xE )
-		{
+        if( xI > xE ) {
 			tmp = xE;
 			xE = xI;
 			xI = tmp;
 		}
-
-		if( yI > yE )
-		{
+        if( yI > yE ) {
 			tmp = yE;
 			yE = yI;
 			yI = tmp;
 		}
 		m_pLblSelection->setGeometry( xI + 3, yI + 2, abs( xI - xE ), abs( yI - yE ) );
 		m_pLblSelection->show();
-
 		xI = xI / 16;
 		xE = xE / 16;
 		yI = yI /16;
 		yE = yE / 16;
-
 		m_SelectionRect = QRect( xI, yI, xE - xI, yE - yI );
-
-		for( i = yI; i < yE; i++ )
-		{
+        for( i = yI; i < yE; i++ ) {
 			r.clear();
-
-			for( j = xI; j < xE; j++ )
-			{
+            for( j = xI; j < xE; j++ ) {
                 r<<m_Screen[m_MapScreenX][m_MapScreenY][i*32+j];
-
 			}
 			m_ScreenSelection<<r;
 		}
-
 		return;
 	}
 
@@ -749,15 +739,13 @@ void CScreenW::OnScreenReleaseLeft( int x, int y )
 	m_Undo.clear();
     m_Undo<<"SCREENCLICK"<<x<<y<<m_Screen[m_MapScreenX][m_MapScreenY][y*32+x];
 
-    for( i = 0; i < ui->m_pGrTilesBlockH->text().toLongLong(); i++ )
-	{
-        for( j = 0; j < ui->m_pGrTilesBlockW->text().toLongLong(); j++ )
-		{
-            if( ( m_SelTile.x() + (i*32) + j ) < 256 ) m_Screen[m_MapScreenX][m_MapScreenY][(y+i)*32+x+j] = m_SelTile.x()+(i*32)+j;
-                        else Q_ASSERT( false );
-                }
+    for( i = 0; i < ui->m_pGrTilesBlockH->text().toLongLong(); i++ ) {
+        for( j = 0; j < ui->m_pGrTilesBlockW->text().toLongLong(); j++ ) {
+            if( ( m_SelTile.x() + (i*32) + j ) < 256 )
+                m_Screen[m_MapScreenX][m_MapScreenY][(y+i)*32+x+j] = m_SelTile.x()+(i*32)+j;
+            else Q_ASSERT( false );
+        }
 	}
-
 	UpdateScreen();
 }
 
@@ -814,7 +802,6 @@ void CScreenW::PaintTile( QImage *pImage, CTile &tile, int posX, int posY, int d
 {
 	int x, y;
 	
-	
 	for( y = 0; y < 8; y++ )
 	{
 		for( x = 0; x < 8; x++ )
@@ -827,7 +814,6 @@ void CScreenW::PaintTile( QImage *pImage, CTile &tile, int posX, int posY, int d
 void CScreenW::PaintGrid( QImage *pImage, int gridWidth, int gridHeight )
 {
 	int i, j;
-	
 	
 	for( i = 1; i < pImage->height(); i+= ( gridHeight+ 2 ) )
 	{
@@ -847,19 +833,18 @@ void CScreenW::PaintGrid( QImage *pImage, int gridWidth, int gridHeight )
 		}
 	}
 	
-
 }
 
 void CScreenW::OnRadBack()
 {
 	m_SelColor = QPoint( 0, m_SelColor.y() );
-        SetTileDesign(); // aÑADIDO
+    SetTileDesign(); // aÑADIDO
 }
 
 void CScreenW::OnRadFore()
 {
 	m_SelColor = QPoint( 1, m_SelColor.y() );
-        SetTileDesign(); // aÑADIDO
+   SetTileDesign(); // aÑADIDO
 }
 
 void CScreenW::OnTileClear()
@@ -923,13 +908,13 @@ void CScreenW::OnTileFlipVertical()
 	m_TileDesign.FlipVertical();
 	SetTileDesign();
 }
+
 /*
 void CScreenW::OnBankReleaseLeft( int, int )
 {
 	m_DragDrop = false;
 }
-*/
-/*
+
 void CScreenW::OnBankTileMouseMoveEvent( int , int  )
 {
 
@@ -948,8 +933,7 @@ void CScreenW::OnBankTileMouseMoveEvent( int , int  )
 	OnScreenMouseMoveEvent( m_pLblBankTile->x() - m_pFrmScreen->x(), m_pLblBankTile->y() - m_pFrmScreen->y() );
 
 }
-*/
-/*
+
 void CScreenW::OnBank0MouseMoveEvent( int x, int y )
 {
 	OnBankMouseMoveEvent( x, y, 0 );
@@ -983,6 +967,7 @@ void CScreenW::OnBankMouseMoveEvent( int x, int y, int bank )
 	m_pLblBankTile->setVisible( true );
 }
 */
+
 void CScreenW::OnScreenMouseMoveEvent( int x, int y )
 {
     QPalette pal;
@@ -1046,9 +1031,8 @@ void CScreenW::OnScreenMouseMoveEvent( int x, int y )
 void CScreenW::NewScreen()
 {
 	int i;
-		
-    for( i = 0; i < 32*24; i++ ) m_Screen[m_MapScreenX][m_MapScreenY][i] = 0;
-	
+    for( i = 0; i < 32*24; i++ )
+        m_Screen[m_MapScreenX][m_MapScreenY][i] = 0;
 	UpdateScreen();
 }
 
@@ -1068,26 +1052,21 @@ bool CScreenW::LoadScreen( QString fileName )
         return false;
     }
 
-    while( true )
-	{
+    while( true ) {
         line = str.readLine();
 
         if( line.isNull() ) break;
 
+        // Este caso no debería darse... (Estará por compatibilidad)
         if( line == "SCREEN" ) {
             x = 0;
             y = 0;
-        }
-        else if( line.indexOf( "SCREEN-" ) >= 0 ) {
+        } else if( line.indexOf( "SCREEN-" ) >= 0 ) {
             x = line.split( "-" ).at( 1 ).toInt();
             y = line.split( "-" ).at( 2 ).toInt();
-        }
-        else {
-            break;
-        }
+        } else break;
 
-        for( i = 0; i < 32*24; i++ )
-        {
+        for( i = 0; i < 32*24; i++ ) {
             line = str.readLine();
             m_Screen[x][y][i] = line.toInt();
         }
@@ -1098,8 +1077,7 @@ bool CScreenW::LoadScreen( QString fileName )
         ui->m_pGrMapHeight->setValue( str.readLine().toInt() );
         ui->m_pGrMapX->setMaximum( ui->m_pGrMapWidth->value() -  1 );
         ui->m_pGrMapY->setMaximum( ui->m_pGrMapHeight->value() - 1 );
-    }
-    else {
+    } else {
         ui->m_pGrMapWidth->setValue( 1 );
         ui->m_pGrMapHeight->setValue( 1 );
         ui->m_pGrMapX->setMaximum(0);
@@ -1115,10 +1093,8 @@ bool CScreenW::LoadScreen( QString fileName )
 
 bool CScreenW::SaveScreen( QString fileName )
 {
-    int i; // , j;
+    int i;
 	QFile hFile;
-	
-
 	hFile.setFileName( fileName );
 	hFile.open( QIODevice::WriteOnly );
 
@@ -1126,21 +1102,14 @@ bool CScreenW::SaveScreen( QString fileName )
 	
     for( int y = 0; y < ui->m_pGrMapHeight->value(); y++ ) {
         for( int x = 0; x < ui->m_pGrMapWidth->value(); x++ ) {
-
-/*
-            for( j = 0; j < 32*24; j++ ) {
-                if( m_Screen[x][y][j] != 0 ) break;
-            }
-            if( j < 32*24 )
-*/
-            {
-                str<<"SCREEN-"<<x<<"-"<<y<<endl;
-
-                for( i = 0; i < 32*24; i++ ) str<<m_Screen[x][y][i]<<endl;
-            }
+            str << "SCREEN-" << x << "-" << y << endl;
+            for( i = 0; i < 32*24; i++ )
+                str << m_Screen[x][y][i] << endl;
         }
     }
-    str<<"MAP WIDTH-HEIGHT"<<endl<<ui->m_pGrMapWidth->value()<<endl<<ui->m_pGrMapHeight->value();
+    str << "MAP WIDTH-HEIGHT" << endl;
+    str << ui->m_pGrMapWidth->value() << endl;
+    str << ui->m_pGrMapHeight->value();
 
 	hFile.flush();
 	hFile.close();
@@ -1688,11 +1657,10 @@ bool CScreenW::ExportPaletteVDP( QString fileName ) {
 
 void CScreenW::NewTiles()
 {
-	int b, i;
-	
-	for( b = 0; b < 3; b++ )
-	{
-		for( i = 0; i < 256; i++ ) m_TilesBank[i][b] = CTile();
+	int b, i;	
+    for( b = 0; b < 3; b++ ) {
+        for( i = 0; i < 256; i++ )
+            m_TilesBank[i][b] = CTile();
 	}
 	InitBanks();
 }
@@ -1758,7 +1726,6 @@ bool CScreenW::LoadTilesLibrary( QString fileName, int bankOr, int xOr, int yOr,
     int dX, dY;
     QString line;
     QFile hFile;
-
 
     hFile.setFileName( fileName );
     hFile.open( QIODevice::ReadOnly );
@@ -1828,7 +1795,6 @@ bool CScreenW::SaveTiles( QString fileName )
 	int i, b;
 	int x, y;
 	QFile hFile;
-	
 
 	hFile.setFileName( fileName );
 	hFile.open( QIODevice::WriteOnly );
@@ -1837,17 +1803,13 @@ bool CScreenW::SaveTiles( QString fileName )
 	
 	str<<"TILES"<<endl;
 	
-	for( b = 0; b < 3; b++ )
-	{
+    for( b = 0; b < 3; b++ ) {
 		str<<"BANK"<<b<<endl;
-		
-		for( i = 0; i < 256; i++ )
-		{
+        for( i = 0; i < 256; i++ ) {
 			for( x = 0; x < 8; x++ ) str<<m_TilesBank[i][b].get_BgColor(x)<<endl;
 			for( x = 0; x < 8; x++ ) str<<m_TilesBank[i][b].get_ForeColor(x)<<endl;
-			for( y = 0; y < 8; y++ )
-			{
-				for( x = 0; x < 8; x++ ) str<<m_TilesBank[i][b].get_Pixel( x, y )<<endl;
+            for( y = 0; y < 8; y++ ) {
+                for( x = 0; x < 8; x++ ) str<<m_TilesBank[i][b].get_Pixel( x, y )<<endl;
 			}
 		}
 	}
@@ -1864,7 +1826,6 @@ void CScreenW::GroupTiles()
 	int i, j, b;
 	int index;
 	CTile groupBank[256];
-
 
 	for( b = 0; b < 3; b++ )
 	{
@@ -2053,22 +2014,17 @@ bool CScreenW::ExportTilesData( QString fileName, bool hexa )
 	int b;
 	QFile hFile;
 	
-
 	hFile.setFileName( fileName );
 	hFile.open( QIODevice::WriteOnly );
 
 	QTextStream str( &hFile );
 	
-	for( b = 0; b < 3; b++ )
-	{
+    for( b = 0; b < 3; b++ ) {
 		str<<QString( "BANK_PATTERN_%1:").arg( b )<<endl;
 
-		for( j = 0; j < 256; j++ )
-		{
+        for( j = 0; j < 256; j++ ) {
 			str<<"db ";
-			
-			for( i = 0; i < 8; i++ ) 
-			{
+			for( i = 0; i < 8; i++ ) {
 				if( hexa ) str<<QString( "0x%1" ).arg( m_TilesBank[j][b].GetRowPattern( i ), 0, 16 );
 				else str<<m_TilesBank[j][b].GetRowPattern( i );
 
@@ -2080,15 +2036,11 @@ bool CScreenW::ExportTilesData( QString fileName, bool hexa )
 	
 	str<<endl<<endl;
 	
-	for( b = 0; b < 3; b++ )
-	{
+    for( b = 0; b < 3; b++ ) {
 		str<<QString( "BANK_COLOR_%1:").arg( b )<<endl;
-
-		for( j = 0; j < 256; j++ )
-		{
+        for( j = 0; j < 256; j++ ) {
 			str<<"db ";
-			for( i = 0; i < 8; i++ ) 
-			{
+            for( i = 0; i < 8; i++ ) {
 				if( hexa ) str<<QString( "0x%1" ).arg( m_TilesBank[j][b].GetRowColor( i ), 0, 16 );
 				else str<<m_TilesBank[j][b].GetRowColor( i );
 
@@ -2108,7 +2060,6 @@ bool CScreenW::DeduceColorPalette( unsigned int color, unsigned int palette[16] 
     int i;
     unsigned int tmp;
     unsigned int paltmp[3];
-
 
     if( color >= 9000000 && color <= 17000000 ) { //RED 6, 8, 9
 
@@ -2133,8 +2084,8 @@ bool CScreenW::DeduceColorPalette( unsigned int color, unsigned int palette[16] 
     }
 
     return true;
-
 }
+
 /*
 bool CScreenW::ImportTilesPNGAdv( QString fileName ) {
     int x, y, i, b;
@@ -2214,6 +2165,7 @@ bool CScreenW::ImportTilesPNGAdv( QString fileName ) {
     return true;
 }
 */
+
 void CScreenW::CheckImagePalette( QString fileName, unsigned int palette[] ) {
     QImage image;
     int i;
@@ -2248,13 +2200,8 @@ void CScreenW::CheckImagePalette( QString fileName, unsigned int palette[] ) {
                     }
                 }
             }
-
         }
     }
-
-
-
-
 }
 
 bool CScreenW::ImportTiles( QString fileName, QString paletteFileName )
@@ -2266,19 +2213,13 @@ bool CScreenW::ImportTiles( QString fileName, QString paletteFileName )
 	QImage image;
 	unsigned int palette[16];
 	
-	
-    if( paletteFileName == "" ) //Palette used by nMSXtiles
-    {
+    // Palette used by nMSXtiles
+    if( paletteFileName == "" ) {
         for( i = 0; i < 16; i++ ) palette[i] = COLORS_TABLE_SCREEN[i];
-
-        CheckImagePalette( fileName, palette);
-    }
-    else
-    {
+        CheckImagePalette( fileName, palette );
+    } else {
         if( !image.load( paletteFileName ) ) return false;
-
         if( image.width() < 16  ) return false;
-
         for( i = 0; i < 16; i++ ) palette[i] = (unsigned int )image.pixel( i, 0 );
     }
 
@@ -2352,12 +2293,9 @@ bool CScreenW::ImportPolkaTiles( QString fileName )
 
     fread( (char*)buffer, 2048, 1, myFile );
 
-	for( i = 0; i < 256; i++ )
-	{
-		for( y = 0; y < 8; y++ )
-		{
-			for( x = 0; x < 8; x++ )
-			{
+    for( i = 0; i < 256; i++ ) {
+        for( y = 0; y < 8; y++ ) {
+            for( x = 0; x < 8; x++ ) {
 				value = ( buffer[ i*8 + y ] >> x ) & 0x1;
 				m_TilesBank[i][0].put_Pixel( x, y, value );
 			}
@@ -2366,16 +2304,16 @@ bool CScreenW::ImportPolkaTiles( QString fileName )
 
     fread( (char*)buffer, 2048, 1, myFile );
 
-	for( i = 0; i < 256; i++ )
-	{
-		for( y = 0; y < 8; y++ )
-		{
+    for( i = 0; i < 256; i++ ) {
+        for( y = 0; y < 8; y++ ) {
 			m_TilesBank[i][0].put_BgColor( y, ( buffer[i*8 + y] >> 4 ) & 0xF );
 			m_TilesBank[i][0].put_ForeColor( y, ( buffer[i*8 + y] ) & 0xF );
 		}
 	}
 
-    for( b = 0; b < 3; b++ ) for( i = 0; i < 32*8; i++ ) m_Screen[m_MapScreenX][m_MapScreenY][i+b*32*8]=i;
+    for( b = 0; b < 3; b++ )
+        for( i = 0; i < 32*8; i++ )
+            m_Screen[m_MapScreenX][m_MapScreenY][i+b*32*8]=i;
 
     fclose( myFile );
 
@@ -2390,7 +2328,6 @@ bool CScreenW::ExportPolkaTiles( QString fileName )
 	int i, y, x;
 	unsigned char buffer[256*8];
 	
-
 	if( !( pFile = fopen( qPrintable( fileName ), "wb" ) ) ) return false;
 
 	sprintf( (char*)buffer, "%s", "POLKA" );
@@ -2398,25 +2335,19 @@ bool CScreenW::ExportPolkaTiles( QString fileName )
 	buffer[6] = 0;
 	fwrite( buffer, sizeof( unsigned char ), 7, pFile );
 
-	for( i = 0; i < 256; i++ )
-	{
-		for( y = 0; y < 8; y++ )
-		{
+    for( i = 0; i < 256; i++ ) {
+        for( y = 0; y < 8; y++ ) {
 			buffer[ i*8 + y ] = 0;
-
-			for( x = 0; x < 8; x++ )
-			{
-				buffer[ i*8 + y ] |= ( m_TilesBank[i][0].get_Pixel( x, y )<<x );
+            for( x = 0; x < 8; x++ ) {
+                buffer[ i*8 + y ] |= ( m_TilesBank[i][0].get_Pixel( x, y ) << x );
 			}
 		}
 	}
 
 	fwrite( buffer, sizeof( unsigned char ), 2048, pFile );
 
-	for( i = 0; i < 256; i++ )
-	{
-		for( y = 0; y < 8; y++ )
-		{
+    for( i = 0; i < 256; i++ ) {
+        for( y = 0; y < 8; y++ ) {
 			buffer[i*8+y] = ( (m_TilesBank[i][0].get_BgColor(y )<<4 ) | (m_TilesBank[i][0].get_ForeColor(y) ) );
 		}
 	}
@@ -2462,29 +2393,25 @@ bool CScreenW::ExportPolkaTiles( QString fileName )
 
 void CScreenW::Fill1to255()
 {
-    int b;
-    int i;
-
-
-    for( b = 0; b < 3; b++ ) for( i = 0; i < 32*8; i++ ) m_Screen[m_MapScreenX][m_MapScreenY][i+b*32*8]=i;
+    int b, i;
+    for( b = 0; b < 3; b++ )
+        for( i = 0; i < 32*8; i++ )
+            m_Screen[m_MapScreenX][m_MapScreenY][i+b*32*8]=i;
     UpdateScreen();
 }
 
 int CScreenW::GetColor( unsigned int color, unsigned int palette[] )
 {
 	int i;
-	
-	for( i = 0; i < 16; i++ )
-	{
+    for( i = 0; i < 16; i++ ) {
 		if( color == palette[i] ) return i;
 	}
-	//Color not in palette
+    // Color not in palette
 	return 0;
 }
 
 void CScreenW::OnOneBank()
 {
-
     if( ui->m_pGrOneBank->isChecked() ) {
         QMessageBox msgBox;
         msgBox.setText( "Tiles from Bank 1 and 2 will be replaced by the Tiles of Bank 0." );
@@ -2497,24 +2424,18 @@ void CScreenW::OnOneBank()
             return;
          }
     }
-
 	int i;
 	m_pTabBank->setCurrentIndex( 0 );
-		
-	for( i = 0; i < 256; i++ )
-	{
+    for( i = 0; i < 256; i++ ) {
 		m_TilesBank[i][1] = m_TilesBank[i][0];
 		m_TilesBank[i][2] = m_TilesBank[i][0];
 	}
-	
     m_pTabBank->setTabEnabled( 1, !ui->m_pGrOneBank->isChecked() );
     m_pTabBank->setTabEnabled( 2, !ui->m_pGrOneBank->isChecked() );
-
     ui->m_pGrBackgroundTiles1->setVisible( !ui->m_pGrOneBank->isChecked() );
     ui->m_pGrBackgroundTiles2->setVisible( !ui->m_pGrOneBank->isChecked() );
     ui->m_pGrLblBackgroundTiles1->setVisible( !ui->m_pGrOneBank->isChecked() );
     ui->m_pGrLblBackgroundTiles2->setVisible( !ui->m_pGrOneBank->isChecked() );
-
 	InitBanks();
 }
 
@@ -2522,28 +2443,21 @@ void CScreenW::OnOneBank()
 void CScreenW::SetOneBank( bool value )
 {
     ui->m_pGrOneBank->setChecked( value );
-    // if( value ) OnOneBank();
     // Añadido para que no se habra el cuadro de diálogo...
-    if( value ) {
-        int i;
-        m_pTabBank->setCurrentIndex( 0 );
-
-        for( i = 0; i < 256; i++ )
-        {
-            m_TilesBank[i][1] = m_TilesBank[i][0];
-            m_TilesBank[i][2] = m_TilesBank[i][0];
-        }
-
-        m_pTabBank->setTabEnabled( 1, !ui->m_pGrOneBank->isChecked() );
-        m_pTabBank->setTabEnabled( 2, !ui->m_pGrOneBank->isChecked() );
-
-        ui->m_pGrBackgroundTiles1->setVisible( !ui->m_pGrOneBank->isChecked() );
-        ui->m_pGrBackgroundTiles2->setVisible( !ui->m_pGrOneBank->isChecked() );
-        ui->m_pGrLblBackgroundTiles1->setVisible( !ui->m_pGrOneBank->isChecked() );
-        ui->m_pGrLblBackgroundTiles2->setVisible( !ui->m_pGrOneBank->isChecked() );
-
-        InitBanks();
+    if( !value ) return;
+    int i;
+    m_pTabBank->setCurrentIndex( 0 );
+    for( i = 0; i < 256; i++ ) {
+        m_TilesBank[i][1] = m_TilesBank[i][0];
+        m_TilesBank[i][2] = m_TilesBank[i][0];
     }
+    m_pTabBank->setTabEnabled( 1, !ui->m_pGrOneBank->isChecked() );
+    m_pTabBank->setTabEnabled( 2, !ui->m_pGrOneBank->isChecked() );
+    ui->m_pGrBackgroundTiles1->setVisible( !ui->m_pGrOneBank->isChecked() );
+    ui->m_pGrBackgroundTiles2->setVisible( !ui->m_pGrOneBank->isChecked() );
+    ui->m_pGrLblBackgroundTiles1->setVisible( !ui->m_pGrOneBank->isChecked() );
+    ui->m_pGrLblBackgroundTiles2->setVisible( !ui->m_pGrOneBank->isChecked() );
+    InitBanks();
 }
 
 bool CScreenW::GetOneBank()
@@ -2553,24 +2467,20 @@ bool CScreenW::GetOneBank()
 
 void CScreenW::OnQuitFocus( int ) {
     ui->m_pGrNothing->setFocus();
-
 }
 
+// Diálogo de intercambio de colores, realmente intercambia las baldosas
 void CScreenW::OnChangeColors() {
     CChangeColors *pChangeColors = new CChangeColors( this );
     pChangeColors->exec();
-
     if( pChangeColors->result() == 0 ) {
         delete pChangeColors;
         return;
     }
-
     QList<QPoint> changeColors = pChangeColors->get_Changes();
     delete pChangeColors;
-
     CTile tile;
     QPoint c;
-
     for( int b = 0; b < 3; b++ ) {
         for( int j = 0; j < 256; j++ ) {
             tile = m_TilesBank[j][b];
@@ -2578,7 +2488,6 @@ void CScreenW::OnChangeColors() {
             m_TilesBank[j][b] = tile;
         }
     }
-
     InitBanks();
 }
 

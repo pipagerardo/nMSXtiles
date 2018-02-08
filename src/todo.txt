@@ -1,0 +1,52 @@
+
+------------------------------------------------------------
+El Undo falla entre bancos
+------------------------------------------------------------
+Hacer un visualizador de todo el mapa
+------------------------------------------------------------
+
+
+El tamaño de las habitaciones es fijo a 32 x 24 baldosas.
+Hay que conseguir que se pueda modificar...
+
+512 + 3 + 3 =
+384 + 3 + 3 =
+
+archivo:    cscreenw.cpp
+linea:      88
+
+m_pLblScreen = new CLabelBtn( ui->m_pFrmScreen, 32*16, 24*16 );
+m_pLblScreen->setGeometry( 3, 3, 32*16, 24*16 );
+    m_pLblScreen->setMouseTracking( true );
+    m_pLblScreen->show();
+
+
+m_screen_width  = 32 * 16;
+m_screen_height = 24 * 16;
+
+El contenedor:
+    QFrame      ui->m_pFrmScreen        setGeometry( 23, 24, 518, 391 )
+
+    CLabelBtn   m_pLblScreen            setGeometry( 3, 3, m_screen_width, m_screen_height );
+
+    CLabelBtn   m_pLblSelection         setGeometry( 0, 0, 0, 0 );
+                                        setFrameShape( QFrame::Box );
+                                        setFrameShadow( QFrame::Raised );
+
+
+// El mapa consta de 64 x 64 habitaciones de 3 bancos de 256 baldosas
+int m_Screen[64][64][256*3];	//Codi de Tile assignat
+unsigned char m_Buffer[256*3*64*64]; // Buffer para copiar el mapa
+
+// La habitación en el mapa, está fijada a un máximo de 64 x 64
+int m_MapScreenX;
+int m_MapScreenY;
+
+// Las etiquetas de filas y columnas...
+QLabel *m_pColsLabels[32];
+QLabel *m_pRowsLabels[24];
+
+CTile m_TilesBank[256][3];
+
+
+------------------------------------------------------------

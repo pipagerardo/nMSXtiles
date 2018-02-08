@@ -18,8 +18,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    m_Version = "0.9.0 Developing...";
-
+    m_Version = QString( "%1.%2.%3" ).arg( VER_NMSXTILES_MAJOR ).arg( VER_NMSXTILES_MINOR ).arg( VER_NMSXTILES_PATCH );
     QSettings settings( "Pentacour", "nMSXTiles" );
     m_LastPathLoadProject = settings.value( "LoadProject" ).toString();
     m_LastPathExport = settings.value( "Export" ).toString();

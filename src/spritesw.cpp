@@ -132,7 +132,9 @@ void CSpritesW::Initialize()
 		m_pLblViews[i]->put_Image( image ); 
 	}
 	
-	m_pLblSprites = new CLabelBtn( m_pFrmSprites, 96*2, 96*2 );
+// m_pLblSprites = new CLabelBtn( m_pFrmSprites, 96*2, 96*2 );
+// Añadido para pintar arrastrando...
+    m_pLblSprites = new CLabelBtnMove( m_pFrmSprites, 96*2, 96*2 );
 	m_pLblSprites->setGeometry( 2, 2, 96*2, 96*2 );
 	
 	connect( m_pLblSprites, SIGNAL( onClickedLeft( int, int ) ), this, SLOT( OnSpritesClickLeft( int, int ) ) );

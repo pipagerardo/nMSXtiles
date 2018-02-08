@@ -15,7 +15,7 @@
 #include <QDrag>
 
 namespace Ui {
-class CScreenW;
+    class CScreenW;
 }
 
 // class CScreenW : public QDialog, public Ui_FScreenW
@@ -154,16 +154,14 @@ private:
 	CLabelBtn *m_pLblColors;
 	CLabelBtn *m_pLblScreen;
 	bool m_Selecting;
-	CTile m_TilesBank[256][3];
+
 	CTile m_TileDesign;
 	CTile m_CopyTile;
-    int m_Screen[64][64][256*3];	//Codi de Tile assignat
-    unsigned char m_Buffer[256*3*64*64]; //TODO - 1
+
 	QPoint m_SelColor;
 	QPoint m_SelTile;
 	QImage m_BankImages[3];
-	QLabel *m_pColsLabels[32];
-	QLabel *m_pRowsLabels[24];
+
 	QPoint m_LastGridValue;
 	QList<QVariant> m_Undo;
 	CTile m_UndoTile;
@@ -174,19 +172,18 @@ private:
 	QRect m_SelectionRect;						//Rectangle de sel_leccio
 	int m_LastTilesBlockW;
 	int m_LastTilesBlockH;
-
-    int m_MapScreenX;
-    int m_MapScreenY;
 	int m_MouseX;
 	int m_MouseY;
-    int m_CurrentScreen;
+
 	QImage m_CursorImage;
 	CLabelBtn *m_pLblCursor[4];
 	QDrag *m_pDrag;
     int m_LastBank;
     int m_LastBankX;
     int m_LastBankY;
-	
+
+//  int m_CurrentScreen; // ??? Sin uso
+
 	void CopyToTileDesign( int index, int bank );
 	void SetTileDesign();
 	void UpdateBank( int tile, int bank, bool updateBank = true );
@@ -205,6 +202,25 @@ private:
 
     bool DeduceColorPalette( unsigned int color, unsigned int palette[16] );
     void CheckImagePalette( QString fileName, unsigned int palette[] );
+
+
+    // El mapa consistente en 64 x 64 habitaciones de 256 * 3 baldosas
+    int m_Screen[64][64][256*3];	//Codi de Tile assignat
+    unsigned char m_Buffer[256*3*64*64]; //TODO - 1  Un buffer para el mapa
+
+    // Tres bancos de baldosas de 256 baldosas cada banco
+    CTile m_TilesBank[256][3];
+
+    // Las etiquetas de columnas y filas...
+    QLabel *m_pColsLabels[32];
+    QLabel *m_pRowsLabels[24];
+
+    int m_MapScreenX; // Las habitaciones de ancho del mapa
+    int m_MapScreenY; // Las habitaciones de alto del mapa
+
+    // Añadido para cambiar el tamaño de la pantalla...
+    // int m_screen_width;
+    // int m_screen_height;
 
 };
 
