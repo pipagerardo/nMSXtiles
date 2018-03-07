@@ -58,8 +58,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 }
 
-MainWindow::~MainWindow()
-{
+MainWindow::~MainWindow() {
     delete ui;
 }
 
@@ -79,8 +78,7 @@ void MainWindow::closeEvent( QCloseEvent *pEvent ) {
 //                 MENU PROJECT
 // ----------------------------------------------
 
-void MainWindow::on_action_Project_New_triggered()
-{
+void MainWindow::on_action_Project_New_triggered() {
 
     if( m_pScreen &&
         QMessageBox::question( this,
@@ -103,8 +101,7 @@ void MainWindow::on_action_Project_New_triggered()
 
 }
 
-void MainWindow::on_action_Project_Load_triggered()
-{
+void MainWindow::on_action_Project_Load_triggered() {
     int i;
     QString relPath;
     QFile hFile;
@@ -230,51 +227,8 @@ void MainWindow::on_action_Project_Close_triggered()
     EnableMenuItems();
 }
 
-void MainWindow::on_action_Project_Import_Polka_triggered()
-{
-    QString relPath;
-    QFile hFile;
-    QString fileName;
-
-    on_action_Project_Close_triggered();
-
-    fileName = QFileDialog::getOpenFileName( this,
-        "Import Polka! project", m_LastPathLoadProject,
-        "Polka! project (*.ppr);;All files (*.*)"
-    );
-
-    if( fileName == "" ) return;
-
-    m_LastPathLoadProject = fileName.left( fileName.lastIndexOf( "/" ) );
-
-    InitScreen();
-
-//  m_pScreen->ImportPolkaScreen( fileName );
-    m_pScreen->ImportPolkaTiles( fileName );
-
-    EnableMenuItems();
-
-}
-
-void MainWindow::on_action_Project_Export_Polka_triggered()
-{
-    QString fileName;
-
-    fileName = QFileDialog::getSaveFileName( this,
-        "Export Polka! project", m_LastPathExport,
-        "Polka! project (*.ppr);;All files (*.*)"
-    );
-
-    if( fileName > "" )
-    {
-        m_LastPathExport = fileName.left( fileName.lastIndexOf( "/" ) );
-        m_pScreen->ExportPolkaTiles( fileName );
-    }
-
-}
-
 void MainWindow::on_action_Project_Quit_triggered() {
-    on_action_Sprites_Close_triggered();
+    on_action_Sprites_1_Close_triggered();
     on_action_Project_Close_triggered();
     QSettings settings( "Pentacour", "nMSXTiles" );
     settings.setValue( "LoadProject", m_LastPathLoadProject ) ;
@@ -292,14 +246,12 @@ void MainWindow::on_action_Project_Quit_triggered() {
 //                MENU SCREEN
 // ----------------------------------------------
 
-void MainWindow::on_action_Screen_New_triggered()
-{
+void MainWindow::on_action_Screen_New_triggered() {
     on_action_Screen_Save_triggered();
     m_pScreen->NewScreen();
 }
 
-void MainWindow::on_action_Screen_Load_triggered()
-{
+void MainWindow::on_action_Screen_Load_triggered() {
     QFile hFile;
     QString line;
     QString fileName;
@@ -319,8 +271,7 @@ void MainWindow::on_action_Screen_Save_triggered()
     else m_pScreen->SaveScreen( m_ScreenFile );
 }
 
-void MainWindow::on_action_Screen_Save_as_triggered()
-{
+void MainWindow::on_action_Screen_Save_as_triggered() {
     QString fileName;
     fileName = QFileDialog::getSaveFileName( this,
         "Screen - Save as", m_LastPathLoadProject,
@@ -333,8 +284,7 @@ void MainWindow::on_action_Screen_Save_as_triggered()
     }
 }
 
-void MainWindow::on_action_Screen_Export_Screen_triggered()
-{
+void MainWindow::on_action_Screen_Export_Screen_triggered() {
     QString fileName;
     CDlgExportScreen *pExport;
 
@@ -376,47 +326,25 @@ void MainWindow::on_action_Screen_Export_Screen_triggered()
     }
 }
 
-void MainWindow::on_action_Screen_Export_Map_PNG_File_triggered()
-{
+void MainWindow::on_action_Screen_Import_SC2_triggered() {
     QString fileName;
-    fileName = QFileDialog::getSaveFileName( this, "Map - Export PNG file as", m_LastPathExport );
-    if( fileName > "" ) {
-        m_LastPathExport = fileName.left( fileName.lastIndexOf( "/" ) );
-        m_pScreen->ExportMapPNG( fileName );
-    }
-}
-
-void MainWindow::on_action_Screen_Export_Screen_PNG_File_triggered()
-{
-    QString fileName;
-    fileName = QFileDialog::getSaveFileName( this,
-        "Screen - Export PNG file as", m_LastPathExport,
-        "Images (*.png);;All files (*.*)"
+    fileName = QFileDialog::getOpenFileName( this,
+        "Screen - Import SC2", m_LastPathLoadProject,
+        "MSX screen 2 image (*.sc2);;All files (*.*)"
     );
-    if( fileName > "" ) {
-        m_LastPathExport = fileName.left( fileName.lastIndexOf( "/" ) );
-        m_pScreen->ExportScreenPNG( fileName );
-    }
+    if( fileName == "" ) return;
+    m_LastPathLoadProject = fileName.left( fileName.lastIndexOf( "/" ) );
+    m_pScreen->ImportSC2( fileName );
 }
 
-void MainWindow::on_action_Screen_Fill_Screen_whith_tiles_1_to_255_triggered()
-{
-    if( QMessageBox::question( this,
-        "Confirm", "Fill Screen with tiles from 1 to 255",
-        QMessageBox::Yes, QMessageBox::No ) == QMessageBox::Yes
-    )
-    {
-        m_pScreen->Fill1to255();
-    }
-}
-
-// void CMainWindow::OnExchangeTiles()
-void MainWindow::on_action_Screen_Exchange_tiles_triggered()
-{
-    CDlgExchangeTiles dlg( NULL );
-    dlg.exec();
-    if( dlg.result() == 0 ) return;
-    m_pScreen->ExchangeTiles( dlg.get_Tile1(), dlg.get_Tile2() );
+void MainWindow::on_action_Screen_Export_SC2_triggered() {
+    QString fileName = QFileDialog::getSaveFileName( this,
+        "Screen - Export SC2", m_LastPathLoadProject,
+        "MSX screen 2 image (*.sc2);;All files (*.*)"
+    );
+    if( fileName == "" ) return;
+    m_LastPathLoadProject = fileName.left( fileName.lastIndexOf( "/" ) );
+    m_pScreen->ExportSC2( fileName );
 }
 
 // ----------------------------------------------
@@ -437,8 +365,8 @@ void MainWindow::on_action_Palette_New_triggered()
 
 void MainWindow::on_action_Palette_Load_triggered()
 {
-    QFile hFile;
-    QString line;
+//    QFile hFile;
+//    QString line;
     QString fileName;
     fileName = QFileDialog::getOpenFileName( this,
         "Palette - Load", m_LastPathLoadProject,
@@ -469,20 +397,12 @@ void MainWindow::on_action_Palette_Save_as_triggered()
     }
 }
 
-void MainWindow::on_action_Palette_Change_triggered()
-{
-    changepalette* pal = new changepalette( m_pScreen, m_pScreen->COLORS_TABLE_SCREEN, 0 );
-    QObject::connect( pal, &changepalette::signal_change_palette, m_pScreen, &CScreenW::UpdatePalette );
-    pal->show();
-    pal->exec();
-}
-
 void MainWindow::on_action_Palette_Export_ASM_triggered()
 {
     QString fileName;
     fileName = QFileDialog::getSaveFileName( this,
         "Palette - Create ASM Palette file as", m_LastPathLoadProject,
-        "Assambler (*.asm);;Text (*.txt);;All files (*.*)"
+        "Assembler (*.asm);;Text (*.txt);;All files (*.*)"
     );
     if( fileName > "" ) {
         m_LastPathLoadProject = fileName.left( fileName.lastIndexOf( "/" ));
@@ -503,25 +423,12 @@ void MainWindow::on_action_Palette_Export_VDP_triggered()
     }
 }
 
-void MainWindow::on_action_Palette_Create_PNG_triggered()
-{
-    QString fileName;
-    fileName = QFileDialog::getSaveFileName( this,
-        "Palette - Create PNG Palette file as", m_LastPathLoadProject,
-        "Images (*.png);;All files (*.*)"
-    );
-    if( fileName > "" ) {
-        m_LastPathLoadProject = fileName.left( fileName.lastIndexOf( "/" ));
-        m_pScreen->GenPNGPaletteFile( fileName );
-    }
-}
-
 // ----------------------------------------------
 //                 MENU TILES
 // ----------------------------------------------
 void MainWindow::on_action_Tiles_New_triggered()
 {
-    on_action_Sprites_Save_triggered();
+    on_action_Sprites_1_Save_triggered();
     m_pScreen->NewTiles();
 }
 
@@ -575,7 +482,7 @@ void MainWindow::on_action_Tiles_Export_ASM_data_triggered()
     QString fileName;
     fileName = QFileDialog::getSaveFileName( this,
         "Tiles - Export to ASM as", m_LastPathExport,
-        "Assambbler (*.asm);;Text (*.txt);;All files (*.*)"
+        "Assembler (*.asm);;Text (*.txt);;All files (*.*)"
     );
     if( fileName > "" ) {
         m_LastPathExport = fileName.left( fileName.lastIndexOf( "/" ) );
@@ -588,7 +495,7 @@ void MainWindow::on_action_Tiles_Export_ASM_data_Hexadecimal_triggered()
     QString fileName;
     fileName = QFileDialog::getSaveFileName( this,
         "Tiles - Export to ASM as", m_LastPathExport,
-        "Assambbler (*.asm);;Text (*.txt);;All files (*.*)"
+        "Assembler (*.asm);;Text (*.txt);;All files (*.*)"
     );
     if( fileName > "" ) {
         m_LastPathExport = fileName.left( fileName.lastIndexOf( "/" ) );
@@ -601,7 +508,7 @@ void MainWindow::on_action_Tiles_Export_bin_data_triggered()
     QString fileName;
     fileName = QFileDialog::getSaveFileName( this,
         "Tiles - Export to bin data as", m_LastPathExport,
-        "Assambbler (*.asm);;Text (*.txt);;All files (*.*)"
+        "Binary (*.bin);;Text (*.txt);;All files (*.*)"
     );
     if( fileName > "" ) {
         m_LastPathExport = fileName.left( fileName.lastIndexOf( "/" ) );
@@ -620,72 +527,6 @@ void MainWindow::on_action_Tiles_Export_bin_data_compressed_whith_Pletter_trigge
         m_LastPathExport = fileName.left( fileName.lastIndexOf( "/" ) );
         m_pScreen->ExportTilesBinPletter( fileName );
     }
-}
-
-void MainWindow::on_action_Tiles_Export_PNG_file_triggered()
-{
-    QString fileName;
-    fileName = QFileDialog::getSaveFileName( this,
-        "Tiles - Export PNG as", m_LastPathLoadProject,
-        "Images (*.png);;All files(*.*)"
-    );
-    if( fileName > "" )
-    {
-        m_LastPathLoadProject = fileName.left( fileName.lastIndexOf( "/" ));
-        m_pScreen->ExportTilesPNG( fileName );
-    }
-}
-
-void MainWindow::on_action_Tiles_Import_PNG_file_created_whith_nMSXtiles_triggered()
-{
-    QString fileName;
-    fileName = QFileDialog::getOpenFileName( this,
-        "Tiles - Import PNG file created with nMSXtiles", m_LastPathLoadProject,
-        "Image (*.png);;All files (*.*)"
-    );
-    if( fileName == ""  )
-    {
-        QMessageBox::critical( this, "Error", "No file selected!" );
-        return;
-    }
-    m_LastPathLoadProject = fileName.left( fileName.lastIndexOf( "/" ) );
-    if( !m_pScreen->ImportTiles( fileName ) )
-    {
-        QMessageBox::critical( this, "Error", "Not supported format file" );
-    }
-
-    on_action_Tiles_Tools_Reorder_colors_triggered();
-}
-
-void MainWindow::on_action_Tiles_Import_triggered()
-{
-        QString fileName;
-        QString fileNamePalette;
-        QMessageBox::information( this, "", "First you will be prompted for an Image with Palette (see manual). Then you will be prompted for the Tiles Image" );
-        fileNamePalette = QFileDialog::getOpenFileName( this,
-            "Tiles - Import Image with Palette", m_LastPathLoadProject,
-            "Palette (*.png);;All files (*.*)"
-        );
-        if( fileNamePalette == "" )
-        {
-            QMessageBox::critical( this, "Error", "No palette, no image!" );
-            return;
-        }
-        m_LastPathLoadProject = fileNamePalette.left( fileNamePalette.lastIndexOf( "/" ) );
-        fileName = QFileDialog::getOpenFileName( this,
-            "Tiles - Import Image with Tiles", m_LastPathLoadProject,
-            "Image (*.png);;All files (*.*)"
-        );
-        if( fileName == ""  )
-        {
-            QMessageBox::critical( this, "Error", "No file selected!" );
-            return;
-        }
-        m_LastPathLoadProject = fileName.left( fileName.lastIndexOf( "/" ) );
-        if( !m_pScreen->ImportTiles( fileName, fileNamePalette ) )
-        {
-            QMessageBox::critical( this, "Error", "Not supported format file" );
-        }
 }
 
 /*
@@ -708,64 +549,144 @@ void CMainWindow::OnImportTilesPNGAdv()
 */
 
 // ----------------------------------------------
+//             MENU SCREEN TOOLS
+// ----------------------------------------------
+void MainWindow::on_action_Screen_Tools_Fill_Screen_whith_tiles_1_to_255_triggered() {
+    if( QMessageBox::question( this,
+        "Confirm", "Fill Screen with tiles from 1 to 255",
+        QMessageBox::Yes, QMessageBox::No ) == QMessageBox::Yes
+    )
+    {
+        m_pScreen->Fill1to255();
+    }
+}
+
+// ----------------------------------------------
+//             MENU PALETTE TOOLS
+// ----------------------------------------------
+
+void MainWindow::on_action_Palette_Tools_Change_Palette_triggered()
+{
+    changepalette* pal = new changepalette( m_pScreen, m_pScreen->COLORS_TABLE_SCREEN, 0 );
+    QObject::connect( pal, &changepalette::signal_change_palette, m_pScreen, &CScreenW::UpdatePalette );
+    pal->show();
+    pal->exec();
+}
+
+// ----------------------------------------------
 //             MENU TILES TOOLS
 // ----------------------------------------------
 
-void MainWindow::on_action_Tiles_Tools_Reorder_colors_triggered()
-{
-    m_pScreen->ReorderColors();
-}
-
-void MainWindow::on_action_Tiles_Tools_Copy_triggered()
-{
+void MainWindow::on_action_Tiles_Tools_Copy_triggered() {
     m_pScreen->CopyTile();
 }
 
-void MainWindow::on_action_Tiles_Tools_Paste_triggered()
-{
+void MainWindow::on_action_Tiles_Tools_Paste_triggered() {
     m_pScreen->PasteTile();
 }
 
-void MainWindow::on_action_Tiles_Tools_Paste_colors_triggered()
-{
+void MainWindow::on_action_Tiles_Tools_Paste_colors_triggered() {
     m_pScreen->PasteTileColors();
 }
 
-void MainWindow::on_action_Tiles_Tools_Undo_triggered()
-{
+void MainWindow::on_action_Tiles_Tools_Undo_triggered() {
     m_pScreen->Undo();
 }
 
-void MainWindow::on_action_Tiles_Tools_Group_Tiles_triggered()
-{
+void MainWindow::on_action_Tiles_Tools_Reorder_colors_triggered() {
+    m_pScreen->ReorderColors();
+}
+
+void MainWindow::on_action_Tiles_Tools_Group_Tiles_triggered() {
     m_pScreen->GroupTiles();
 }
 
+void MainWindow::on_action_Tiles_Tools_Exchange_tiles_triggered() {
+    CDlgExchangeTiles dlg( NULL );
+    dlg.exec();
+    if( dlg.result() == 0 ) return;
+    m_pScreen->ExchangeTiles( dlg.get_Tile1(), dlg.get_Tile2() );
+}
+
 // ----------------------------------------------
-//                MENU SPRITES
+//                MENU PNG TOOLS
+// ----------------------------------------------
+// void MainWindow::on_action_Screen_Export_Screen_PNG_File_triggered() {
+void MainWindow::on_action_PNG_Tools_Export_PNG_Screen_file_triggered() {
+    QString fileName;
+    fileName = QFileDialog::getSaveFileName( this,
+        "Screen - Export PNG file as", m_LastPathExport,
+        "Images (*.png);;All files (*.*)"
+    );
+    if( fileName > "" ) {
+        m_LastPathExport = fileName.left( fileName.lastIndexOf( "/" ) );
+        m_pScreen->ExportScreenPNG( fileName );
+    }
+}
+
+// void MainWindow::on_action_Screen_Export_Map_PNG_File_triggered() {
+void MainWindow::on_action_PNG_Tools_Export_Map_PNG_file_triggered() {
+    QString fileName;
+    fileName = QFileDialog::getSaveFileName( this, "Map - Export PNG file as", m_LastPathExport );
+    if( fileName > "" ) {
+        m_LastPathExport = fileName.left( fileName.lastIndexOf( "/" ) );
+        m_pScreen->ExportMapPNG( fileName );
+    }
+}
+
+// void MainWindow::on_action_Tiles_Export_PNG_file_triggered() {
+void MainWindow::on_action_PNG_Tools_Export_PNG_Tiles_file_triggered() {
+    QString fileName;
+    fileName = QFileDialog::getSaveFileName( this,
+        "Tiles - Export PNG as", m_LastPathLoadProject,
+        "Images (*.png);;All files(*.*)"
+    );
+    if( fileName > "" ) {
+        m_LastPathLoadProject = fileName.left( fileName.lastIndexOf( "/" ));
+        m_pScreen->ExportTilesPNG( fileName );
+    }
+}
+
+void MainWindow::on_action_PNG_Tools_Import_PNG_Tiles_file_triggered() {
+    QString fileName;
+    fileName = QFileDialog::getOpenFileName( this,
+        "Tiles - Import PNG file created with nMSXtiles", m_LastPathLoadProject,
+        "Image (*.png);;All files (*.*)"
+    );
+    if( fileName == ""  ) {
+        QMessageBox::critical( this, "Error", "No file selected!" );
+        return;
+    }
+    m_LastPathLoadProject = fileName.left( fileName.lastIndexOf( "/" ) );
+    if( !m_pScreen->ImportTiles( fileName ) ) {
+        QMessageBox::critical( this, "Error", "Not supported format file" );
+    }
+    on_action_Tiles_Tools_Reorder_colors_triggered();
+}
+
+// ----------------------------------------------
+//                MENU SPRITES 1
 // ----------------------------------------------
 
-void MainWindow::on_action_Sprites_New_triggered()
-{
+void MainWindow::on_action_Sprites_1_New_triggered() {
     if( m_pSprites &&
         QMessageBox::question( this, "Confirm", "Save Sprites?",
         QMessageBox::Yes, QMessageBox::No ) == QMessageBox::Yes
-    ) on_action_Sprites_Save_as_triggered(); // OnSaveAsSprites();
+    ) on_action_Sprites_1_Save_as_triggered(); // OnSaveAsSprites();
     InitSprites();
     m_pSprites->NewSprites();
     m_SpritesFile = "";
     EnableMenuItems();
 }
 
-void MainWindow::on_action_Sprites_Load_triggered()
-{
+void MainWindow::on_action_Sprites_1_Load_triggered() {
     QFile hFile;
     QString line;
     QString fileName;
     if( m_pSprites &&
         QMessageBox::question( this, "Confirm", "Save Sprites?",
         QMessageBox::Yes, QMessageBox::No ) == QMessageBox::Yes
-    ) on_action_Sprites_Save_as_triggered();
+    ) on_action_Sprites_1_Save_as_triggered();
 
     fileName = QFileDialog::getOpenFileName( this,
         "Sprite - Load", m_LastPathLoadProject,
@@ -779,14 +700,12 @@ void MainWindow::on_action_Sprites_Load_triggered()
     EnableMenuItems();
 }
 
-void MainWindow::on_action_Sprites_Save_triggered()
-{
+void MainWindow::on_action_Sprites_1_Save_triggered() {
     if( m_SpritesFile == "" ) on_action_Screen_Save_as_triggered();
     else m_pSprites->SaveSprites( m_SpritesFile );
 }
 
-void MainWindow::on_action_Sprites_Save_as_triggered()
-{
+void MainWindow::on_action_Sprites_1_Save_as_triggered() {
     QString fileName;
     fileName = QFileDialog::getSaveFileName( this,
         "Sprites - Save as", m_LastPathLoadProject,
@@ -799,8 +718,7 @@ void MainWindow::on_action_Sprites_Save_as_triggered()
     }
 }
 
-void MainWindow::on_action_Sprites_Close_triggered()
-{
+void MainWindow::on_action_Sprites_1_Close_triggered() {
     if( m_pSprites &&
         QMessageBox::question( this, "Confirm", "Save Sprites?",
         QMessageBox::Yes, QMessageBox::No ) == QMessageBox::Yes
@@ -809,12 +727,10 @@ void MainWindow::on_action_Sprites_Close_triggered()
     EnableMenuItems();
 }
 
-void MainWindow::on_action_Sprites_Export_triggered()
-{
+void MainWindow::on_action_Sprites_1_Export_triggered() {
     QString fileName;
     fileName = QFileDialog::getSaveFileName( this,
         "Sprites - Export as", m_LastPathExport
-        /* ? ? ? */
     );
     if( fileName > "" ) {
         m_LastPathExport = fileName.left( fileName.lastIndexOf( "/" ) );
@@ -823,24 +739,27 @@ void MainWindow::on_action_Sprites_Export_triggered()
 }
 
 // ----------------------------------------------
+//                MENU SPRITES 2
+// ----------------------------------------------
+
+// ----------------------------------------------
 //                MENU ABOUT
 // ----------------------------------------------
-void MainWindow::on_action_About_nMSXtiles_triggered()
-{
+void MainWindow::on_action_About_nMSXtiles_triggered() {
     QString s;
     s = QString(
-        "Screen, tiles and sprites editor for MSX screen 2.\n\nVersion %1\n\n"
+        "Screen, tiles and sprites editor for MSX screen 2 and 4.\n\nVersion %1\n\n"
     ).arg( m_Version );
     s += "https://github.com/pipagerardo/nMSXtiles\n";
     s += "http://pentacour.com/";
     QMessageBox::about( this, "nMSXtiles", s );
 }
 
-void MainWindow::on_action_About_pentacour_triggered()
-{
+void MainWindow::on_action_About_pentacour_triggered() {
     QMessageBox msgBox;
     msgBox.setWindowTitle( "pentacour:" );
-    msgBox.setWindowIcon( QIcon(QString::fromUtf8(":res/pentacour.png") ) );
+//  msgBox.setWindowIcon( QIcon(QString::fromUtf8(":res/pentacour.png") ) );
+    msgBox.setIconPixmap( QPixmap(QString::fromUtf8(":res/pentacour.png") ) );
     msgBox.setText(
     QString(
         "Ramon de las Heras Gomiz\n" \
@@ -853,11 +772,11 @@ void MainWindow::on_action_About_pentacour_triggered()
     msgBox.exec();
 }
 
-void MainWindow::on_action_About_pipagerardo_triggered()
-{
+void MainWindow::on_action_About_pipagerardo_triggered() {
     QMessageBox msgBox;
     msgBox.setWindowTitle( "pipagerardo:" );
-    msgBox.setWindowIcon( QIcon(QString::fromUtf8(":res/pipagerardo.png") ) );
+//  msgBox.setWindowIcon( QIcon(QString::fromUtf8(":res/pipagerardo.png") ) );
+    msgBox.setIconPixmap( QPixmap(QString::fromUtf8(":res/pipagerardo.png") ) );
     msgBox.setText(
     QString(
         "Programmer who is currently developing nMSXtiles\n\n" \
@@ -873,8 +792,7 @@ void MainWindow::on_action_About_pipagerardo_triggered()
     msgBox.exec();
 }
 
-void MainWindow::on_action_About_QT_triggered()
-{
+void MainWindow::on_action_About_QT_triggered() {
     QMessageBox::aboutQt( this, "Qt" );
 }
 
@@ -892,8 +810,6 @@ void MainWindow::InitScreen() {
 
 void MainWindow::QuitScreen() {
     if( m_pScreen ) {
-        // m_pScreen->close(); // Close();
-        // m_pScreen->close();
         delete m_pScreen;
         if( m_pScreen_sbw ) ui->mdiArea->setActiveSubWindow( m_pScreen_sbw );
         ui->mdiArea->closeActiveSubWindow();
@@ -907,7 +823,7 @@ void MainWindow::InitSprites() {
     m_pSprites= new CSpritesW();
     m_pSprites->Initialize();
     m_pSprites_sbw = ui->mdiArea->addSubWindow( m_pSprites, Qt::Dialog ); // Qt::Widget );
-    QObject::connect( m_pSprites, &CSpritesW::signal_close, this, &MainWindow::on_action_Sprites_Close_triggered );
+    QObject::connect( m_pSprites, &CSpritesW::signal_close, this, &MainWindow::on_action_Sprites_1_Close_triggered );
     m_pSprites->show();
 }
 
@@ -998,71 +914,170 @@ void MainWindow::SaveProject()
 
 }
 
-void MainWindow::EnableMenuItems()
-{
+void MainWindow::EnableMenuItems() {
 
-    // Project:
+// Project:
     ui->action_Project_New->setEnabled( m_pScreen == NULL );
     ui->action_Project_Load->setEnabled( true );
     ui->action_Project_Save->setEnabled( m_pScreen != NULL );
     ui->action_Project_Save_as->setEnabled( m_pScreen != NULL );
     ui->action_Project_Close->setEnabled( m_pScreen != NULL );
-    ui->action_Project_Import_Polka->setEnabled( true );
-    ui->action_Project_Export_Polka->setEnabled( m_pScreen != NULL );
 
-    // Screen:
+// Screen:
     ui->action_Screen_New->setEnabled( m_pScreen!= NULL );
     ui->action_Screen_Load->setEnabled( m_pScreen != NULL );
     ui->action_Screen_Save->setEnabled( m_pScreen != NULL );
     ui->action_Screen_Save_as->setEnabled( m_pScreen != NULL );
     ui->action_Screen_Export_Screen->setEnabled( m_pScreen != NULL );
-    ui->action_Screen_Export_Map_PNG_File->setEnabled( m_pScreen != NULL );
-    ui->action_Screen_Export_Screen_PNG_File->setEnabled( m_pScreen );
-    ui->action_Screen_Fill_Screen_whith_tiles_1_to_255->setEnabled( m_pScreen != NULL );
-    ui->action_Screen_Exchange_tiles->setEnabled( m_pScreen != NULL );
-    //m_pActExportScreenData->setEnabled( m_pScreen != NULL );
-    //m_pActExportScreenDataHexa->setEnabled( m_pScreen != NULL );
-    //m_pActExportScreenBin->setEnabled( m_pScreen != NULL );
-    //m_pActExportScreenBinPletter->setEnabled( m_pScreen != NULL );
+    ui->action_Screen_Import_SC2->setEnabled( m_pScreen != NULL );
+    ui->action_Screen_Export_SC2->setEnabled( m_pScreen != NULL );
 
-    // Palette:
+// Palette:
     ui->action_Palette_New->setEnabled( m_pScreen != NULL );
     ui->action_Palette_Load->setEnabled( m_pScreen != NULL );
     ui->action_Palette_Save->setEnabled( m_pScreen != NULL );
     ui->action_Palette_Save_as->setEnabled( m_pScreen != NULL );
-    ui->action_Palette_Change->setEnabled( m_pScreen != NULL );
     ui->action_Palette_Export_ASM->setEnabled( m_pScreen != NULL );
     ui->action_Palette_Export_VDP->setEnabled( m_pScreen != NULL );
-    ui->action_Palette_Create_PNG->setEnabled( m_pScreen != NULL );
 
-    // Tiles:
+// Tiles:
     ui->action_Tiles_New->setEnabled( m_pScreen != NULL );
     ui->action_Tiles_Load->setEnabled( m_pScreen != NULL );
     ui->action_Tiles_Save->setEnabled( m_pScreen != NULL );
     ui->action_Tiles_Save_as->setEnabled( m_pScreen != NULL );
     ui->action_Tiles_Load_from_Library->setEnabled( m_pScreen != NULL );
     ui->action_Tiles_Export_ASM_data->setEnabled( m_pScreen != NULL );
-    ui->action_Tiles_Export_ASM_data_Hexadecimal->setEnabled( m_pScreen );
+    ui->action_Tiles_Export_ASM_data_Hexadecimal->setEnabled( m_pScreen != NULL );
     ui->action_Tiles_Export_bin_data->setEnabled( m_pScreen != NULL );
     ui->action_Tiles_Export_bin_data_compressed_whith_Pletter->setEnabled( m_pScreen != NULL );
-    ui->action_Tiles_Export_PNG_file->setEnabled( m_pScreen );
-    ui->action_Tiles_Import_PNG_file_created_whith_nMSXtiles->setEnabled( m_pScreen );
-    ui->action_Tiles_Import->setEnabled( m_pScreen != NULL );
 
-    // Tiles Tools:
-    ui->action_Tiles_Tools_Reorder_colors->setEnabled( m_pScreen != NULL );
+// Screen Tools:
+    ui->action_Screen_Tools_Fill_Screen_whith_tiles_1_to_255->setEnabled( m_pScreen != NULL );
+
+// Palette Tools:
+    ui->action_Palette_Tools_Change_Palette->setEnabled( m_pScreen != NULL );
+
+// Tiles Tools:
     ui->action_Tiles_Tools_Copy->setEnabled( m_pScreen != NULL );
     ui->action_Tiles_Tools_Paste->setEnabled( m_pScreen != NULL );
     ui->action_Tiles_Tools_Paste_colors->setEnabled( m_pScreen != NULL );
     ui->action_Tiles_Tools_Undo->setEnabled( m_pScreen != NULL );
-    ui->action_Tiles_Tools_Group_Tiles->setEnabled( m_pScreen );
+    ui->action_Tiles_Tools_Reorder_colors->setEnabled( m_pScreen != NULL );
+    ui->action_Tiles_Tools_Group_Tiles->setEnabled( m_pScreen != NULL );
+    ui->action_Tiles_Tools_Exchange_tiles->setEnabled( m_pScreen != NULL );
 
-    // Sprites:
-    ui->action_Sprites_New->setEnabled( m_pSprites == NULL );
-    ui->action_Sprites_Load->setEnabled( true );
-    ui->action_Sprites_Save->setEnabled( m_pSprites != NULL );
-    ui->action_Sprites_Save_as->setEnabled( m_pSprites != NULL );
-    ui->action_Sprites_Close->setEnabled( m_pSprites != NULL );
-    ui->action_Sprites_Export->setEnabled( m_pSprites != NULL );
+// PNG Tools:
+    ui->action_PNG_Tools_Export_PNG_Screen_file->setEnabled( m_pScreen != NULL );
+    ui->action_PNG_Tools_Export_Map_PNG_file->setEnabled( m_pScreen != NULL );
+    ui->action_PNG_Tools_Export_PNG_Tiles_file->setEnabled( m_pScreen != NULL );
+    ui->action_PNG_Tools_Import_PNG_Tiles_file->setEnabled( m_pScreen != NULL );
+
+// Sprites 1:
+    ui->action_Sprites_1_New->setEnabled( m_pSprites == NULL );
+    ui->action_Sprites_1_Load->setEnabled( true );
+    ui->action_Sprites_1_Save->setEnabled( m_pSprites != NULL );
+    ui->action_Sprites_1_Save_as->setEnabled( m_pSprites != NULL );
+    ui->action_Sprites_1_Close->setEnabled( m_pSprites != NULL );
+    ui->action_Sprites_1_Export->setEnabled( m_pSprites != NULL );
+
+// Sprites 2:
+    ui->action_Sprites_2_New->setEnabled( false );
+    ui->action_Sprites_2_Load->setEnabled( false );
+    ui->action_Sprites_2_Save->setEnabled( false );
+    ui->action_Sprites_2_Save_as->setEnabled( false );
+    ui->action_Sprites_2_Close->setEnabled( false );
+    ui->action_Sprites_2_Export->setEnabled( false );
+}
+
+// --------------------------------------------------------------
+// COSAS QUITADAS: ( TRASTERO )
+// --------------------------------------------------------------
+
+/*
+//  ui->action_Project_Import_Polka->setEnabled( true );
+//  ui->action_Project_Export_Polka->setEnabled( m_pScreen != NULL );
+void MainWindow::on_action_Project_Import_Polka_triggered() {
+    QString relPath;
+    QFile hFile;
+    QString fileName;
+
+    on_action_Project_Close_triggered();
+
+    fileName = QFileDialog::getOpenFileName( this,
+        "Import Polka! project", m_LastPathLoadProject,
+        "Polka! project (*.ppr);;All files (*.*)"
+    );
+
+    if( fileName == "" ) return;
+
+    m_LastPathLoadProject = fileName.left( fileName.lastIndexOf( "/" ) );
+
+    InitScreen();
+
+//  m_pScreen->ImportPolkaScreen( fileName );
+    m_pScreen->ImportPolkaTiles( fileName );
+
+    EnableMenuItems();
 
 }
+void MainWindow::on_action_Project_Export_Polka_triggered() {
+    QString fileName;
+
+    fileName = QFileDialog::getSaveFileName( this,
+        "Export Polka! project", m_LastPathExport,
+        "Polka! project (*.ppr);;All files (*.*)"
+    );
+
+    if( fileName > "" )
+    {
+        m_LastPathExport = fileName.left( fileName.lastIndexOf( "/" ) );
+        m_pScreen->ExportPolkaTiles( fileName );
+    }
+
+}
+*/
+
+/*
+// ui->action_Palette_Create_PNG->setEnabled( m_pScreen != NULL );
+void MainWindow::on_action_Palette_Create_PNG_triggered() {
+    QString fileName;
+    fileName = QFileDialog::getSaveFileName( this,
+        "Palette - Create PNG Palette file as", m_LastPathLoadProject,
+        "Images (*.png);;All files (*.*)"
+    );
+    if( fileName > "" ) {
+        m_LastPathLoadProject = fileName.left( fileName.lastIndexOf( "/" ));
+        m_pScreen->GenPNGPaletteFile( fileName );
+    }
+}
+*/
+
+/*
+// ui->action_Tiles_Import->setEnabled( m_pScreen != NULL );
+void MainWindow::on_action_Tiles_Import_triggered() {
+    QString fileName;
+    QString fileNamePalette;
+    QMessageBox::information( this, "", "First you will be prompted for an Image with Palette (see manual). Then you will be prompted for the Tiles Image" );
+        fileNamePalette = QFileDialog::getOpenFileName( this,
+        "Tiles - Import Image with Palette", m_LastPathLoadProject,
+        "Palette (*.png);;All files (*.*)"
+    );
+     if( fileNamePalette == "" ) {
+        QMessageBox::critical( this, "Error", "No palette, no image!" );
+        return;
+    }
+    m_LastPathLoadProject = fileNamePalette.left( fileNamePalette.lastIndexOf( "/" ) );
+    fileName = QFileDialog::getOpenFileName( this,
+        "Tiles - Import Image with Tiles", m_LastPathLoadProject,
+        "Image (*.png);;All files (*.*)"
+    );
+    if( fileName == ""  ) {
+        QMessageBox::critical( this, "Error", "No file selected!" );
+        return;
+    }
+    m_LastPathLoadProject = fileName.left( fileName.lastIndexOf( "/" ) );
+    if( !m_pScreen->ImportTiles( fileName, fileNamePalette ) ) {
+        QMessageBox::critical( this, "Error", "Not supported format file" );
+    }
+}
+*/

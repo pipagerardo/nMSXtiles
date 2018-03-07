@@ -77,7 +77,12 @@ void CDlgExportScreen::OnOk() {
 
 
 void CDlgExportScreen::OnSelFileName() {
-    m_pForm->m_pGrFileName->setText( QFileDialog::getSaveFileName( this, "File Name", m_LastPath ) );
+    m_pForm->m_pGrFileName->setText(
+        QFileDialog::getSaveFileName(
+            this, "File Name", m_LastPath,
+            "Assembler (*.asm);;Binary (*.bin);;Pletter5 (*.plet5);;All files (*.*)"
+        )
+    );
 }
 
 

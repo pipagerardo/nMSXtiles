@@ -22,7 +22,7 @@
     <rect>
      <x>10</x>
      <y>10</y>
-     <width>161</width>
+     <width>201</width>
      <height>21</height>
     </rect>
    </property>
@@ -35,7 +35,7 @@
     </font>
    </property>
    <property name="text">
-    <string>Export Screen</string>
+    <string>Export Map / Screen</string>
    </property>
    <property name="textFormat">
     <enum>Qt::AutoText</enum>

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>502</width>
-    <height>474</height>
+    <width>718</width>
+    <height>476</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -23,8 +23,8 @@
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>501</width>
-      <height>421</height>
+      <width>721</width>
+      <height>471</height>
      </rect>
     </property>
     <property name="verticalScrollBarPolicy">
@@ -40,7 +40,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>502</width>
+     <width>718</width>
      <height>21</height>
     </rect>
    </property>
@@ -54,9 +54,6 @@
     <addaction name="action_Project_Save_as"/>
     <addaction name="action_Project_Close"/>
     <addaction name="separator"/>
-    <addaction name="action_Project_Import_Polka"/>
-    <addaction name="action_Project_Export_Polka"/>
-    <addaction name="separator"/>
     <addaction name="action_Project_Quit"/>
    </widget>
    <widget class="QMenu" name="menuScreen">
@@ -67,12 +64,11 @@
     <addaction name="action_Screen_Load"/>
     <addaction name="action_Screen_Save"/>
     <addaction name="action_Screen_Save_as"/>
-    <addaction name="action_Screen_Export_Screen"/>
-    <addaction name="action_Screen_Export_Map_PNG_File"/>
-    <addaction name="action_Screen_Export_Screen_PNG_File"/>
     <addaction name="separator"/>
-    <addaction name="action_Screen_Fill_Screen_whith_tiles_1_to_255"/>
-    <addaction name="action_Screen_Exchange_tiles"/>
+    <addaction name="action_Screen_Export_Screen"/>
+    <addaction name="action_Screen_Export_SC2"/>
+    <addaction name="separator"/>
+    <addaction name="action_Screen_Import_SC2"/>
    </widget>
    <widget class="QMenu" name="menuPalette">
     <property name="title">
@@ -83,11 +79,8 @@
     <addaction name="action_Palette_Save"/>
     <addaction name="action_Palette_Save_as"/>
     <addaction name="separator"/>
-    <addaction name="action_Palette_Change"/>
-    <addaction name="separator"/>
     <addaction name="action_Palette_Export_ASM"/>
     <addaction name="action_Palette_Export_VDP"/>
-    <addaction name="action_Palette_Create_PNG"/>
    </widget>
    <widget class="QMenu" name="menuTiles">
     <property name="title">
@@ -98,24 +91,24 @@
     <addaction name="action_Tiles_Save"/>
     <addaction name="action_Tiles_Save_as"/>
     <addaction name="action_Tiles_Load_from_Library"/>
+    <addaction name="separator"/>
     <addaction name="action_Tiles_Export_ASM_data"/>
     <addaction name="action_Tiles_Export_ASM_data_Hexadecimal"/>
     <addaction name="action_Tiles_Export_bin_data"/>
     <addaction name="action_Tiles_Export_bin_data_compressed_whith_Pletter"/>
-    <addaction name="action_Tiles_Export_PNG_file"/>
-    <addaction name="action_Tiles_Import_PNG_file_created_whith_nMSXtiles"/>
-    <addaction name="action_Tiles_Import"/>
+    <addaction name="separator"/>
    </widget>
-   <widget class="QMenu" name="menuSprites">
+   <widget class="QMenu" name="menuSprites_1">
     <property name="title">
-     <string>Sprites</string>
+     <string>Sprites 1</string>
     </property>
-    <addaction name="action_Sprites_New"/>
-    <addaction name="action_Sprites_Load"/>
-    <addaction name="action_Sprites_Save"/>
-    <addaction name="action_Sprites_Save_as"/>
-    <addaction name="action_Sprites_Close"/>
-    <addaction name="action_Sprites_Export"/>
+    <addaction name="action_Sprites_1_New"/>
+    <addaction name="action_Sprites_1_Load"/>
+    <addaction name="action_Sprites_1_Save"/>
+    <addaction name="action_Sprites_1_Save_as"/>
+    <addaction name="action_Sprites_1_Close"/>
+    <addaction name="separator"/>
+    <addaction name="action_Sprites_1_Export"/>
    </widget>
    <widget class="QMenu" name="menuAbout">
     <property name="title">
@@ -130,19 +123,62 @@
     <property name="title">
      <string>Tiles Tools</string>
     </property>
-    <addaction name="action_Tiles_Tools_Reorder_colors"/>
     <addaction name="action_Tiles_Tools_Copy"/>
     <addaction name="action_Tiles_Tools_Paste"/>
     <addaction name="action_Tiles_Tools_Paste_colors"/>
     <addaction name="action_Tiles_Tools_Undo"/>
+    <addaction name="separator"/>
+    <addaction name="action_Tiles_Tools_Reorder_colors"/>
     <addaction name="action_Tiles_Tools_Group_Tiles"/>
+    <addaction name="action_Tiles_Tools_Exchange_tiles"/>
+   </widget>
+   <widget class="QMenu" name="menuScreen_Tools">
+    <property name="title">
+     <string>Screen Tools</string>
+    </property>
+    <addaction name="action_Screen_Tools_Fill_Screen_whith_tiles_1_to_255"/>
+   </widget>
+   <widget class="QMenu" name="menuSprites_2">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="title">
+     <string>Sprites 2</string>
+    </property>
+    <addaction name="action_Sprites_2_New"/>
+    <addaction name="action_Sprites_2_Load"/>
+    <addaction name="action_Sprites_2_Save"/>
+    <addaction name="action_Sprites_2_Save_as"/>
+    <addaction name="action_Sprites_2_Close"/>
+    <addaction name="separator"/>
+    <addaction name="action_Sprites_2_Export"/>
+   </widget>
+   <widget class="QMenu" name="menuPNG_Tools">
+    <property name="title">
+     <string>PNG Tools</string>
+    </property>
+    <addaction name="action_PNG_Tools_Export_PNG_Screen_file"/>
+    <addaction name="action_PNG_Tools_Export_Map_PNG_file"/>
+    <addaction name="action_PNG_Tools_Export_PNG_Tiles_file"/>
+    <addaction name="separator"/>
+    <addaction name="action_PNG_Tools_Import_PNG_Tiles_file"/>
+   </widget>
+   <widget class="QMenu" name="menuPalette_Tools">
+    <property name="title">
+     <string>Palette Tools</string>
+    </property>
+    <addaction name="action_Palette_Tools_Change_Palette"/>
    </widget>
    <addaction name="menuProject"/>
    <addaction name="menuScreen"/>
    <addaction name="menuPalette"/>
    <addaction name="menuTiles"/>
+   <addaction name="menuScreen_Tools"/>
+   <addaction name="menuPalette_Tools"/>
    <addaction name="menuTiles_Tools"/>
-   <addaction name="menuSprites"/>
+   <addaction name="menuPNG_Tools"/>
+   <addaction name="menuSprites_1"/>
+   <addaction name="menuSprites_2"/>
    <addaction name="menuAbout"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
@@ -198,16 +234,6 @@
     <string>Close</string>
    </property>
   </action>
-  <action name="action_Project_Import_Polka">
-   <property name="text">
-    <string>Import Polka!</string>
-   </property>
-  </action>
-  <action name="action_Project_Export_Polka">
-   <property name="text">
-    <string>Export Polka!</string>
-   </property>
-  </action>
   <action name="action_Project_Quit">
    <property name="text">
     <string>Quit</string>
@@ -235,17 +261,17 @@
   </action>
   <action name="action_Screen_Export_Screen">
    <property name="text">
-    <string>Export Screen</string>
+    <string>Export Map / Screen</string>
    </property>
   </action>
-  <action name="action_Screen_Export_Map_PNG_File">
+  <action name="action_PNG_Tools_Export_Map_PNG_file">
    <property name="text">
-    <string>Export Map PNG File</string>
+    <string>Export PNG Map File</string>
    </property>
   </action>
-  <action name="action_Screen_Export_Screen_PNG_File">
+  <action name="action_PNG_Tools_Export_PNG_Screen_file">
    <property name="text">
-    <string>Export Screen PNG File</string>
+    <string>Export PNG Screen File</string>
    </property>
   </action>
   <action name="action_Tiles_New">
@@ -290,22 +316,17 @@
   </action>
   <action name="action_Tiles_Export_bin_data_compressed_whith_Pletter">
    <property name="text">
-    <string>Export bin data compressed whith Pletter...</string>
+    <string>Export bin data Pletter...</string>
    </property>
   </action>
-  <action name="action_Tiles_Export_PNG_file">
+  <action name="action_PNG_Tools_Export_PNG_Tiles_file">
    <property name="text">
-    <string>Export PNG file</string>
+    <string>Export PNG Tiles file</string>
    </property>
   </action>
-  <action name="action_Tiles_Import_PNG_file_created_whith_nMSXtiles">
+  <action name="action_PNG_Tools_Import_PNG_Tiles_file">
    <property name="text">
-    <string>Import PNG file created whith nMSXtiles</string>
-   </property>
-  </action>
-  <action name="action_Tiles_Import">
-   <property name="text">
-    <string>Import...</string>
+    <string>Import PNG Tiles file</string>
    </property>
   </action>
   <action name="action_Tiles_Create_PNG_Palette_file">
@@ -355,42 +376,42 @@
     <string>Group Tiles</string>
    </property>
   </action>
-  <action name="action_Sprites_New">
+  <action name="action_Sprites_1_New">
    <property name="text">
     <string>New</string>
    </property>
   </action>
-  <action name="action_Sprites_Load">
+  <action name="action_Sprites_1_Load">
    <property name="text">
     <string>Load</string>
    </property>
   </action>
-  <action name="action_Sprites_Save">
+  <action name="action_Sprites_1_Save">
    <property name="text">
     <string>Save</string>
    </property>
   </action>
-  <action name="action_Sprites_Save_as">
+  <action name="action_Sprites_1_Save_as">
    <property name="text">
     <string>Save as...</string>
    </property>
   </action>
-  <action name="action_Sprites_Close">
+  <action name="action_Sprites_1_Close">
    <property name="text">
     <string>Close</string>
    </property>
   </action>
-  <action name="action_Sprites_Export">
+  <action name="action_Sprites_1_Export">
    <property name="text">
     <string>Export...</string>
    </property>
   </action>
-  <action name="action_Screen_Fill_Screen_whith_tiles_1_to_255">
+  <action name="action_Screen_Tools_Fill_Screen_whith_tiles_1_to_255">
    <property name="text">
     <string>Fill Screen whith tiles  1 to 255</string>
    </property>
   </action>
-  <action name="action_Screen_Exchange_tiles">
+  <action name="action_Tiles_Tools_Exchange_tiles">
    <property name="text">
     <string>Exchange tiles</string>
    </property>
@@ -429,11 +450,6 @@
     <string>Export Palette ASM</string>
    </property>
   </action>
-  <action name="action_Palette_Create_PNG">
-   <property name="text">
-    <string>Create PNG Palette file</string>
-   </property>
-  </action>
   <action name="action_About_pipagerardo">
    <property name="icon">
     <iconset resource="resources.qrc">
@@ -461,7 +477,7 @@
     <string>pentacour</string>
    </property>
   </action>
-  <action name="action_Palette_Change">
+  <action name="action_Palette_Tools_Change_Palette">
    <property name="text">
     <string>Change Palette</string>
    </property>
@@ -472,6 +488,46 @@
   <action name="action_Palette_Export_VDP">
    <property name="text">
     <string>Export Palette VDP</string>
+   </property>
+  </action>
+  <action name="action_Screen_Import_SC2">
+   <property name="text">
+    <string>Import Screen SC2</string>
+   </property>
+  </action>
+  <action name="action_Screen_Export_SC2">
+   <property name="text">
+    <string>Export Screen SC2</string>
+   </property>
+  </action>
+  <action name="action_Sprites_2_New">
+   <property name="text">
+    <string>New</string>
+   </property>
+  </action>
+  <action name="action_Sprites_2_Load">
+   <property name="text">
+    <string>Load</string>
+   </property>
+  </action>
+  <action name="action_Sprites_2_Save">
+   <property name="text">
+    <string>Save</string>
+   </property>
+  </action>
+  <action name="action_Sprites_2_Save_as">
+   <property name="text">
+    <string>Save as...</string>
+   </property>
+  </action>
+  <action name="action_Sprites_2_Close">
+   <property name="text">
+    <string>Close</string>
+   </property>
+  </action>
+  <action name="action_Sprites_2_Export">
+   <property name="text">
+    <string>Export</string>
    </property>
   </action>
  </widget>
