@@ -394,8 +394,8 @@ bool CScreenW::ExportScreenData( QString fileName, bool hexa, int initX, int ini
     hFile.setFileName( fileName );
     hFile.open( QIODevice::WriteOnly | QIODevice::Text );
     QTextStream str( &hFile );
-    addX = ui->m_pGrTilesBlockW->text().toLongLong();
-    addY = ui->m_pGrTilesBlockH->text().toLongLong();
+    addX = 1; // ui->m_pGrTilesBlockW->text().toLongLong(); // ???
+    addY = 1; // ui->m_pGrTilesBlockH->text().toLongLong(); // ???
     wi = initX + w;
     if( wi > 32 ) wi = 32;
     he = initY + h;
@@ -430,8 +430,8 @@ bool CScreenW::ExportScreenBin( QString fileName, int initX, int initY, int w, i
     int addX, addY;
     int wi, he;
     int mapX, mapY;
-    addX = ui->m_pGrTilesBlockW->text().toLongLong();
-    addY = ui->m_pGrTilesBlockH->text().toLongLong();
+    addX = 1; // ui->m_pGrTilesBlockW->text().toLongLong(); // ???
+    addY = 1; // ui->m_pGrTilesBlockH->text().toLongLong(); // ???
     wi = initX + w;
     if( wi > 32 ) wi = 32;
     he = initY + h;
@@ -439,12 +439,12 @@ bool CScreenW::ExportScreenBin( QString fileName, int initX, int initY, int w, i
     for( mapY = 0; mapY < ui->m_pGrMapHeight->value(); mapY++ ) {
         for( mapX = 0; mapX < ui->m_pGrMapWidth->value(); mapX++ ) {
             QFile hFile;
-            hFile.setFileName( QString( "%1-%2-%3" ).arg( fileName ).arg( mapX ).arg( mapY ) );
+            hFile.setFileName( QString( "%1_%2_%3" ).arg( fileName ).arg( mapX ).arg( mapY ) );
             hFile.open( QIODevice::WriteOnly );
             QDataStream str( &hFile );
             for( y = initY; y < he; ) {
                 for( x = initX; x < wi; ) {
-                    str<<(unsigned char)m_Screen[mapX][mapY][y*32+x];
+                    str << (unsigned char)m_Screen[mapX][mapY][y*32+x];
                     x+= addX;
                 }
                 y+= addY;
@@ -463,7 +463,7 @@ bool CScreenW::ExportScreenBinScroll( QString fileName, int initX, int initY, in
     int mapX, mapY;
     QFile hFile;
 //    unsigned char buffer[256*3*64*64];
-//    addX = m_pGrTilesBlockW->text().toLongLong(); //TODO - 1 No te en compte m_pGrTilesBlockW / H
+//    addX = m_pGrTilesBlockW->text().toLongLong(); //TODO - 1 No tiene en cuenta m_pGrTilesBlockW / H
 //    addY = m_pGrTilesBlockH->text().toLongLong();
     hFile.setFileName( fileName );
     hFile.open( QIODevice::WriteOnly );
@@ -512,15 +512,15 @@ bool CScreenW::ExportScreenBinPletter( QString fileName, int initX, int initY, i
     int wi, he;
     int mapX, mapY;
     // unsigned char buffer[256*3*12*12];
-    addX = ui->m_pGrTilesBlockW->text().toLongLong();
-    addY = ui->m_pGrTilesBlockH->text().toLongLong();
-    s = 0;
+    addX = 1; // ui->m_pGrTilesBlockW->text().toLongLong();     // ???
+    addY = 1; // ui->m_pGrTilesBlockH->text().toLongLong();     // ???
     wi = initX + w;
     if( wi > 32 ) wi = 32;
     he = initY + h;
     if( he > 24 ) he = 24;
     for( mapY = 0; mapY < ui->m_pGrMapHeight->value(); mapY++ ) {
         for( mapX = 0; mapX < ui->m_pGrMapWidth->value(); mapX++ ) {
+            s = 0;  // Añadido
             for( y = initY; y < he; ) {
                 for( x = initX; x < wi; ) {
                     m_Buffer[s] = (unsigned char)m_Screen[mapX][mapY][y*32+x];
@@ -529,8 +529,6 @@ bool CScreenW::ExportScreenBinPletter( QString fileName, int initX, int initY, i
                 }
                 y+= addY;
             }
-        // Cambiado:
-        //  PletterMain( s, m_Buffer, QString( "%1_%2_%3").arg( fileName ).arg( mapX ).arg( mapY ) );
             pletter( m_Buffer, s, QString( "%1_%2_%3" ).arg( fileName ).arg( mapX ).arg( mapY ), false );
         }
     }
@@ -542,7 +540,7 @@ bool CScreenW::ExportScreenBinPletterScroll( QString fileName, int initX, int in
     int x, y;
     int wi, he;
     int mapX, mapY;
-//    addX = m_pGrTilesBlockW->text().toLongLong(); //TODO - 1 No te en compte m_pGrTilesBlockW / H
+//    addX = m_pGrTilesBlockW->text().toLongLong(); //TODO - 1 No tiene en cuenta m_pGrTilesBlockW / H
 //    addY = m_pGrTilesBlockH->text().toLongLong();
     s = 0;
     wi = initX + w;
@@ -694,7 +692,9 @@ bool CScreenW::ExportSC2( QString fileName ) {
     // Cabecera:
     out << quint8(  0xFE );     // Binary File
     out << quint16( 0x0000 );   // Init Address
-    out << quint16( 0x37FF );   // End  Address
+//  out << quint16( 0x37FF );   // End  Address
+    out << quint8( 0xFF );      // End  Address
+    out << quint8( 0x37 );      // End  Address
     out << quint16( 0x0000 );   // Run  Address
     // 0000H - 07FFH	-->	Pattern generator table 1 -> 256 * 8 = 2048
     // 0800H - 0FFFH	-->	Pattern generator table 2 -> 256 * 8 = 2048
@@ -814,7 +814,7 @@ bool CScreenW::ExportPaletteASM( QString fileName ) {
     str << "PALETTE:" << endl;
     str << "; --------------------------------------------------------" << endl;
     str << ";    [0~15] Decimal [0~7]      Binary VDP      Hexadecimal" << endl;
-    str << ";   DB    NN, R, G, B    ; 0RRR0BBB 00000GGG ; 0xAARRGGBB " << endl;
+    str << ";   DB    NN, R, B, G    ; 0RRR0BBB 00000GGG ; 0xAARRGGBB " << endl;
     str << "; --------------------------------------------------------" << endl;
     for( int i = 0; i < 16; ++i ) {
         int j = ( i < 15 ) ? i + 1 : 0 ;
@@ -824,7 +824,7 @@ bool CScreenW::ExportPaletteASM( QString fileName ) {
         b = CSupportFuncs::Convert_8bit_to_3bit( color.blue() );
         // Decimal:
         s  = QString( "    DB    %1, " ).arg( j, 2, 10 );
-        s += QString( "%1, %2, %3    ; " ).arg( r ).arg( g ).arg( b );
+        s += QString( "%1, %2, %3    ; " ).arg( r ).arg( b ).arg( g );
         // Binary:
         s += QString( "0%1" ).arg( r, 3, 2, QChar('0') );
         s += QString( "0%1 " ).arg( b, 3, 2, QChar('0') );
