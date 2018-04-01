@@ -50,13 +50,13 @@ void CDlgExportScreen::OnOk() {
     bool res = true;
 
 
-    m_Width = m_pForm->m_pGrWidth->text().toLongLong( &ok );
+    m_Width = m_pForm->m_pGrWidth->text().toInt( &ok );
     res &= ok;
-    if( res ) m_Height = m_pForm->m_pGrHeight->text().toLongLong( &ok );
+    if( res ) m_Height = m_pForm->m_pGrHeight->text().toInt( &ok );
     res &= ok;
-    if( res ) m_X = m_pForm->m_pGrX->text().toLongLong( &ok );
+    if( res ) m_X = m_pForm->m_pGrX->text().toInt( &ok );
     res &= ok;
-    if( res ) m_Y = m_pForm->m_pGrY->text().toLongLong( &ok );
+    if( res ) m_Y = m_pForm->m_pGrY->text().toInt( &ok );
 
     if( !res ) {
         QMessageBox::critical( this, "Error", "Numeric values expected!" );

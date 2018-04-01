@@ -40,12 +40,16 @@ void CDlgBankRange::OnOk()
 {
 	bool ok;
 	
-	m_FromTile = m_pFromTile->text().toLongLong( &ok );
-	if( !ok ) return;
-	
+    m_FromTile = m_pFromTile->text().toInt( &ok );
+    if( !ok ) m_FromTile = 0;
+    if( m_FromTile < 0   ) m_FromTile = 0;
+    if( m_FromTile > 255 ) m_FromTile = 255;
+
 	m_ToTile = m_pToTile->text().toLongLong( &ok );
-	if( !ok ) return;
-	
+    if( !ok ) m_ToTile = 255;
+    if( m_ToTile < m_FromTile ) m_ToTile = m_FromTile;
+    if( m_ToTile > 255 )  m_ToTile = 255;
+
 	m_BankOption = m_pCboBank->currentIndex();
 
 	accept();

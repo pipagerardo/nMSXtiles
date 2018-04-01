@@ -14,9 +14,9 @@ TARGET = nMSXtiles
 #--------------------------------------------------------------------------------
 DEFINES += VER_NMSXTILES_MAJOR=0
 DEFINES += VER_NMSXTILES_MINOR=9
-DEFINES += VER_NMSXTILES_PATCH=3
-win32:VERSION = 0.9.3.0             # major.minor.patch.build
-else:VERSION  = 0.9.3               # major.minor.patch
+DEFINES += VER_NMSXTILES_PATCH=4
+win32:VERSION = 0.9.4.0             # major.minor.patch.build
+else:VERSION  = 0.9.4               # major.minor.patch
 
 #--------------------------------------------------------------------------------
 # TEMPLATE Specifies the name of the template to use when generating the project.

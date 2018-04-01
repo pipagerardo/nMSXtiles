@@ -1083,6 +1083,11 @@ void CScreenW::ExportTilesBinPletter( QString fileName ) {
     {
         return;
     }
+    // 0 -> todos los bancos
+    // 1
+    // 2
+    // 3
+    // b -> 0, 1, 2
     if( ui->m_pGrOneBank->isChecked() ) nLoops = 1;
     else nLoops = 3;
     for( b = 0, sz = 0; b < nLoops; b++ ) {
@@ -1095,7 +1100,8 @@ void CScreenW::ExportTilesBinPletter( QString fileName ) {
     }
     // PletterMain( sz/*b*256*8*/, buffer, QString( fileName + QString( ".til" ) ) );
     // pletter( buffer, sz/*b*256*8*/, QString( fileName + QString( ".til" ) ), false );
-    pletter( buffer, sz/*b*256*8*/, QString( fileName + QString( ".chr" ) ), false );
+    pletter( buffer, sz, QString( fileName + QString( ".chr" ) ), false );
+
     for( b = 0, sz = 0; b < nLoops; b++ ) {
         for( j = dlgBankRange.get_FromTile(); j < dlgBankRange.get_ToTile() + 1; j++ ) {
             if( dlgBankRange.get_BankOption() == 0 || dlgBankRange.get_BankOption() == (b + 1) ) {
@@ -1105,7 +1111,7 @@ void CScreenW::ExportTilesBinPletter( QString fileName ) {
     }
     // PletterMain( sz/*b*256*8*/, buffer, QString( fileName + QString( ".col" ) ) );
     // pletter( buffer, sz/*b*256*8*/, QString( fileName + QString( ".col" ) ), false );
-    pletter( buffer, sz/*b*256*8*/, QString( fileName + QString( ".clr" ) ), false );
+    pletter( buffer, sz, QString( fileName + QString( ".clr" ) ), false );
 }
 
 // -------------------------------------------------
