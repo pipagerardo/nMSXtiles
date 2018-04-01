@@ -153,6 +153,9 @@
       <height>22</height>
      </rect>
     </property>
+    <property name="text">
+     <string>0</string>
+    </property>
     <property name="alignment">
      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
     </property>
@@ -165,6 +168,9 @@
       <width>41</width>
       <height>22</height>
      </rect>
+    </property>
+    <property name="text">
+     <string>0</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -191,6 +197,9 @@
       <width>41</width>
       <height>22</height>
      </rect>
+    </property>
+    <property name="text">
+     <string>32</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -230,6 +239,9 @@
       <width>41</width>
       <height>22</height>
      </rect>
+    </property>
+    <property name="text">
+     <string>24</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>

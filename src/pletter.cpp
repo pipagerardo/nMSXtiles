@@ -96,12 +96,13 @@ struct saves {
             return false;
         }
         fwrite( buf, 1, dp,file );
-        fclose(file);
+        fclose( file );
         // qDebug() << destfilename << ": " << length << " -> " << dp << endl;
         return true;
     }
 } s;
 
+/*
 bool loadfile() {
     FILE *file;
     if( ( file = fopen( qPrintable( sourcefilename ), "rb" ) ) == NULL ) {
@@ -134,6 +135,7 @@ bool loadfile() {
     fclose( file );
     return true;
 }
+*/
 
 // OK
 void initvarcost() {
@@ -274,22 +276,19 @@ bool save( pakdata *p, unsigned q ) {
 void clean() {
 // unsigned *last = NULL;
 // unsigned *prev = NULL;
-// unsigned char *d = NULL;
 // unsigned char *s.buf; // struct saves
 // struct metadata *m;
 // struct pakdata *p[7];
-    if( last != NULL ) delete[] last;
+    if( last != NULL ) delete[] last;   //  last = new unsigned[ 65536 ];
     last = NULL;
-    if( prev != NULL ) delete[] prev;
+    if( prev != NULL ) delete[] prev;   //  prev = new unsigned[ length + 1 ];
     prev = NULL;
-    if( d != NULL ) delete[] d;
-    d = NULL;
-    if( s.buf != NULL ) delete[] s.buf;
+    if( s.buf != NULL ) delete[] s.buf;     // buf = new unsigned char[ length * 2 ];
     s.buf = NULL;
-    if( m != NULL ) delete[] m;
+    if( m != NULL ) delete[] m;               // m = new metadata[ length + 1 ];
     m = NULL;
     for( int i=1; i!=7; ++i ) {
-        if( p[i] != NULL ) delete p[i];
+        if( p[i] != NULL ) delete[] p[i];
         p[i] = NULL;
     }
 }
@@ -359,7 +358,7 @@ bool pletter(
         p[i] = new pakdata[ length + 1 ];
         int l=getlen( p[i], i );
         if( l < minlen && i ) { minlen=l; minbl=i; }
-        printf( "." );
+        // printf( "." );
     }
 
     if( !save( p[minbl], minbl ) ) {
@@ -393,6 +392,8 @@ bool pletter(
 
     if( !loadfile() ) {
         clean();
+        if( d != NULL ) delete[] d;
+        d = NULL;
         return false;
     }
 
@@ -410,10 +411,14 @@ bool pletter(
 
     if( !save( p[minbl], minbl ) ) {
         clean();
+        if( d != NULL ) delete[] d;
+        d = NULL;
         return false;
     }
 
     clean();
+    if( d != NULL ) delete[] d;
+    d = NULL;
     return true;
 }
 */
