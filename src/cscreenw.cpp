@@ -901,6 +901,10 @@ bool CScreenW::LoadTiles( QString fileName ) {
         line = str.readLine();
         if( line != QString( "BANK%1" ).arg( b ) ) {
             hFile.close();
+            if( b == 1 ) {       // Si sólo hay un banco
+                SetOneBank( true );
+                return true;
+            }
             return false;
         }
         for( i = 0; i < 256; i++ ) {
@@ -912,7 +916,7 @@ bool CScreenW::LoadTiles( QString fileName ) {
         }
     }
     hFile.close();
-    InitBanks();
+    SetOneBank( false ); // Pues hay tres bancos
     return true;
 }
 
@@ -939,6 +943,10 @@ bool CScreenW::LoadTilesLibrary( QString fileName, int bankOr, int xOr, int yOr,
         line = str.readLine();
         if( line != QString( "BANK%1" ).arg( b ) ) {
             hFile.close();
+            if( b == 1 ) {       // Si sólo hay un banco
+                SetOneBank( true );
+                return true;
+            }
             return false;
         }
         for( i = 0; i < 256; i++ ) {
@@ -960,7 +968,7 @@ bool CScreenW::LoadTilesLibrary( QString fileName, int bankOr, int xOr, int yOr,
         }
     }
     hFile.close();
-    InitBanks();
+    SetOneBank( false ); // Pues hay tres bancos
     return true;
 }
 
@@ -972,7 +980,8 @@ bool CScreenW::SaveTiles( QString fileName ) {
     hFile.open( QIODevice::WriteOnly );
     QTextStream str( &hFile );
     str << "TILES" << endl;
-    for( b = 0; b < 3; b++ ) {
+    int nLoops = ( GetOneBank() ) ? 1 : 3;
+    for( b = 0; b < nLoops; b++ ) {
         str << "BANK" << b << endl;
         for( i = 0; i < 256; i++ ) {
             for( x = 0; x < 8; x++ ) str<<m_TilesBank[i][b].GetBgColor(x) << endl;
@@ -994,7 +1003,8 @@ bool CScreenW::ExportTilesData( QString fileName, bool hexa ) {
     hFile.setFileName( fileName );
     hFile.open( QIODevice::WriteOnly | QIODevice::Text );
     QTextStream str( &hFile );
-    for( b = 0; b < 3; b++ ) {
+    int nLoops = ( GetOneBank() ) ? 1 : 3;
+    for( b = 0; b < nLoops; b++ ) {
         str<<QString( "BANK_PATTERN_%1:").arg( b ) << endl;
         for( j = 0; j < 256; j++ ) {
             str << "\tDB ";
@@ -1007,7 +1017,7 @@ bool CScreenW::ExportTilesData( QString fileName, bool hexa ) {
         }
     }
     str << endl << endl;
-    for( b = 0; b < 3; b++ ) {
+    for( b = 0; b < nLoops; b++ ) {
         str<<QString( "BANK_COLOR_%1:").arg( b ) << endl;
         for( j = 0; j < 256; j++ ) {
             str << "\tDB ";
@@ -1029,7 +1039,6 @@ bool CScreenW::ExportTilesBin( QString fileName ) {
     int i, j;
     int b;
     QFile hFile;
-    int nLoops;
     CDlgBankRange dlgBankRange;
     dlgBankRange.exec();
     if( dlgBankRange.result() == 0 ) //TODO - 1 MsgBox
@@ -1039,8 +1048,7 @@ bool CScreenW::ExportTilesBin( QString fileName ) {
     // hFile.setFileName( fileName + QString( ".til" ) );
     hFile.setFileName( fileName + QString( ".chr" ) );
     hFile.open( QIODevice::WriteOnly );
-    if( ui->m_pGrOneBank->isChecked() ) nLoops = 1;
-    else nLoops = 3;
+    int nLoops = ( GetOneBank() ) ? 1 : 3;
     QDataStream str( &hFile );
     for( b = 0; b < nLoops; b++ ) {
         for( j = dlgBankRange.get_FromTile(); j <  dlgBankRange.get_ToTile() + 1; j++ ) {
@@ -1075,7 +1083,6 @@ bool CScreenW::ExportTilesBin( QString fileName ) {
 void CScreenW::ExportTilesBinPletter( QString fileName ) {
     long sz;
     int i, b, j;
-    int nLoops;
     unsigned char buffer[256*3*8];
     CDlgBankRange dlgBankRange;
     dlgBankRange.exec();
@@ -1087,9 +1094,8 @@ void CScreenW::ExportTilesBinPletter( QString fileName ) {
     // 1
     // 2
     // 3
-    // b -> 0, 1, 2
-    if( ui->m_pGrOneBank->isChecked() ) nLoops = 1;
-    else nLoops = 3;
+    // b -> 0, 1, 2    
+    int nLoops = ( GetOneBank() ) ? 1 : 3;
     for( b = 0, sz = 0; b < nLoops; b++ ) {
         for( j = dlgBankRange.get_FromTile(); j < dlgBankRange.get_ToTile() + 1; j++ ) {
             if( dlgBankRange.get_BankOption() == 0 || dlgBankRange.get_BankOption() == (b + 1) ) {
@@ -1632,21 +1638,21 @@ void CScreenW::OnOneBank() {
 
 // Función pública:
 void CScreenW::SetOneBank( bool value ) {
+    bool old_value = ui->m_pGrOneBank->isChecked();
     ui->m_pGrOneBank->setChecked( value );
-    // Añadido para que no se habra el cuadro de diálogo...
-    if( !value ) return;
-    int i;
     m_pTabBank->setCurrentIndex( 0 );
-    for( i = 0; i < 256; i++ ) {
-        m_TilesBank[i][1] = m_TilesBank[i][0];
-        m_TilesBank[i][2] = m_TilesBank[i][0];
+    if( ( old_value == false ) && ( value == true ) ) {
+        for( int i = 0; i < 256; i++ ) {
+            m_TilesBank[i][1] = m_TilesBank[i][0];
+            m_TilesBank[i][2] = m_TilesBank[i][0];
+        }
     }
-    m_pTabBank->setTabEnabled( 1, !ui->m_pGrOneBank->isChecked() );
-    m_pTabBank->setTabEnabled( 2, !ui->m_pGrOneBank->isChecked() );
-    ui->m_pGrBackgroundTiles1->setVisible( !ui->m_pGrOneBank->isChecked() );
-    ui->m_pGrBackgroundTiles2->setVisible( !ui->m_pGrOneBank->isChecked() );
-    ui->m_pGrLblBackgroundTiles1->setVisible( !ui->m_pGrOneBank->isChecked() );
-    ui->m_pGrLblBackgroundTiles2->setVisible( !ui->m_pGrOneBank->isChecked() );
+    m_pTabBank->setTabEnabled( 1, !value );
+    m_pTabBank->setTabEnabled( 2, !value );
+    ui->m_pGrBackgroundTiles1->setVisible( !value );
+    ui->m_pGrBackgroundTiles2->setVisible( !value );
+    ui->m_pGrLblBackgroundTiles1->setVisible( !value );
+    ui->m_pGrLblBackgroundTiles2->setVisible( !value );
     InitBanks();
 }
 
