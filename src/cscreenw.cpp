@@ -443,7 +443,7 @@ bool CScreenW::ExportScreenBin( QString fileName, int initX, int initY, int w, i
             hFile.open( QIODevice::WriteOnly );
             QDataStream str( &hFile );
             if (w==32) {
-                int initAddr = 0x1800+initX+initY+32;
+                int initAddr = 0x1800+initX+initY*32;
                 int endAddr = initAddr+h*32;
                 str << quint8( 0xFE );     // Binary File
                 str << quint8((initAddr >> 16) & 0xff );    // Init addr (low)
