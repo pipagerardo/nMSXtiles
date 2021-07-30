@@ -442,16 +442,6 @@ bool CScreenW::ExportScreenBin( QString fileName, int initX, int initY, int w, i
             hFile.setFileName( QString( "%1_%2_%3" ).arg( fileName ).arg( mapX ).arg( mapY ) );
             hFile.open( QIODevice::WriteOnly );
             QDataStream str( &hFile );
-            if (w==32) {
-                int initAddr = 0x1800+initX+initY*32;
-                int endAddr = initAddr+h*32;
-                str << quint8( 0xFE );     // Binary File
-                str << quint8((initAddr >> 16) & 0xff );    // Init addr (low)
-                str << quint8((initAddr >> 8) & 0xff);    // Init Address (high)
-                str << quint8((endAddr >> 16) & 0xff);      // End  Address (low)
-                str << quint8((endAddr >> 8) & 0xff);      // End  Address (high)
-                str << quint16( 0x0000 );   // Run  Address
-            }
             for( y = initY; y < he; ) {
                 for( x = initX; x < wi; ) {
                     str << (unsigned char)m_Screen[mapX][mapY][y*32+x];
