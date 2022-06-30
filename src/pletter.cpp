@@ -10,6 +10,8 @@
 // #include <QDebug>
 #include <QMessageBox>
 
+using Qt::endl;
+
 // REQUISITOS DE ENTRADA:
 //------------------------
 //	bool savelength = false;	// Opcional
