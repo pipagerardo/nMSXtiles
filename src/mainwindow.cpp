@@ -12,6 +12,8 @@
 #include <QTextStream>
 #include <QDebug>
 
+using Qt::endl;
+
 MainWindow::MainWindow(QWidget *parent) :   
     QMainWindow( parent ),
     ui( new Ui::MainWindow )

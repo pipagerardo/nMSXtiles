@@ -5,6 +5,8 @@
 #include <QFile>
 #include <QDebug>
 
+using Qt::endl;
+
 CSpritesSet::CSpritesSet()
 {
 	int i;
@@ -391,7 +393,7 @@ void CSpritesW::UpdateDesigner( int set, int sprite )
 	QImage image;
 
 	
-    image = m_pLblSprites->pixmap()->toImage();
+    image = m_pLblSprites->pixmap().toImage();
 
     CSupportFuncs::SetPixelRect( &image, 0, 0, BG_COLOR, 96*2, 96*2 );
     //
@@ -400,7 +402,7 @@ void CSpritesW::UpdateDesigner( int set, int sprite )
 	
 	m_pLblSprites->put_Image( image );
 	
-	image = m_pLblViews[set]->pixmap()->toImage();
+	image = m_pLblViews[set]->pixmap().toImage();
 	
 	for( i = 0; i < 256; i++ ) UpdatePreview( set, sprite, i, false, &image );
 	
@@ -416,7 +418,7 @@ void CSpritesW::UpdateDesigner( int set, int sprite, int index, bool paintIsZ, Q
 	
 	if( !pImage )
 	{
-		image = m_pLblSprites->pixmap()->toImage();
+		image = m_pLblSprites->pixmap().toImage();
 		pTmp = &image;
 	}
 	else pTmp = pImage;
@@ -436,7 +438,7 @@ void CSpritesW::UpdatePreview()
     unsigned int color;
 
 
-//    image = m_pLblViews[0]->pixmap()->toImage();
+//    image = m_pLblViews[0]->pixmap().toImage();
 /*
     if( paintIsZ ) color = BG_COLOR; // COLORS_TABLE_SPRITES[0];
     else if( m_Sprites.at( set )->GetValue( sprite, index ) == 1 ) color = COLORS_TABLE_SPRITES[ m_Sprites.at( set )->GetColor( sprite ) ];
@@ -472,7 +474,7 @@ void CSpritesW::UpdatePreview( int set, int sprite, int index, bool paintIsZ, QI
 
 	if( !pImage )
 	{
-		image = m_pLblViews[set]->pixmap()->toImage();
+		image = m_pLblViews[set]->pixmap().toImage();
 		pTmp = &image;
 	}
 	else pTmp = pImage;	

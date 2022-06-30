@@ -28,24 +28,24 @@ QImage& CLabelBtn::get_Image()
 
 void CLabelBtn::mouseReleaseEvent( QMouseEvent *pE )
 {
-	if( pE->button() == Qt::LeftButton ) emit onReleasedLeft( pE->x(), pE->y() );
-	else if( pE->button() == Qt::RightButton ) emit onReleasedRight( pE->x(), pE->y() );
+	if( pE->button() == Qt::LeftButton ) emit onReleasedLeft( pE->position().x(), pE->position().y() );
+	else if( pE->button() == Qt::RightButton ) emit onReleasedRight( pE->position().x(), pE->position().y() );
 }
 
 void CLabelBtn::mousePressEvent( QMouseEvent *pE )
 {
-	if( pE->button() == Qt::LeftButton ) emit onClickedLeft( pE->x(), pE->y() );
-	else if( pE->button() == Qt::RightButton ) emit onClickedRight( pE->x(), pE->y() );
+	if( pE->button() == Qt::LeftButton ) emit onClickedLeft( pE->position().x(), pE->position().y() );
+	else if( pE->button() == Qt::RightButton ) emit onClickedRight( pE->position().x(), pE->position().y() );
 }
 
 void CLabelBtn::mouseDoubleClickEvent( QMouseEvent *pE )
 {
-	if( pE->button() == Qt::LeftButton ) emit onDoubleClickedLeft( pE->x(), pE->y() );
+	if( pE->button() == Qt::LeftButton ) emit onDoubleClickedLeft( pE->position().x(), pE->position().y() );
 }
 
 void CLabelBtn::mouseMoveEvent( QMouseEvent *pEvent )
 {
-    emit onMouseMoveEvent( pEvent->x(), pEvent->y() );
+    emit onMouseMoveEvent( pEvent->position().x(), pEvent->position().y() );
 }
 
 void CLabelBtn::SetPixel( int x, int y, uint color )
@@ -55,16 +55,16 @@ void CLabelBtn::SetPixel( int x, int y, uint color )
 }
 
 void CLabelBtnMove::mouseMoveEvent( QMouseEvent *pEvent ) {
-    if( ( pEvent->x() < 0 ) || ( pEvent->x() >= m_Image.width()  ) ) return;
-    if( ( pEvent->y() < 0 ) || ( pEvent->y() >= m_Image.height() ) ) return;
+    if( ( pEvent->position().x() < 0 ) || ( pEvent->position().x() >= m_Image.width()  ) ) return;
+    if( ( pEvent->position().y() < 0 ) || ( pEvent->position().y() >= m_Image.height() ) ) return;
     switch( pEvent->buttons() ) {
         case Qt::LeftButton:
-            emit onClickedLeft( pEvent->x(), pEvent->y() );
+            emit onClickedLeft( pEvent->position().x(), pEvent->position().y() );
         break;
         case Qt::RightButton:
-             emit onClickedRight( pEvent->x(), pEvent->y() );
+             emit onClickedRight( pEvent->position().x(), pEvent->position().y() );
         break;
     }
     // ¿ Es necesario ?
-    // emit onMouseMoveEvent( pEvent->x(), pEvent->y() );
+    // emit onMouseMoveEvent( pEvent->position().x(), pEvent->position().y() );
 }

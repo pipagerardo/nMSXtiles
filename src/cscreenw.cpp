@@ -11,6 +11,8 @@
 #include <QString>
 #include <QMessageBox>
 
+using Qt::endl;
+
 // extern int PletterMain( int dataSize, unsigned char *pData, QString destfilename );
 
 extern bool pletter(
@@ -1757,7 +1759,7 @@ void CScreenW::UpdateBank( int tile, int bank, bool updateScreen ) {
 
 void CScreenW::InitBanks() {
     for( int j = 0; j < 3; j++ ) {
-		m_BankImages[j] = m_pLblBank[j]->pixmap()->toImage();
+		m_BankImages[j] = m_pLblBank[j]->pixmap().toImage();
 		PaintGrid( &m_BankImages[j], 16, 16 );
         for( int i = 0; i < 256; i++ ) {
 			PaintTile( &m_BankImages[j], m_TilesBank[i][j], (i%32)*18+1, (i/32)*18+1, 2 );
