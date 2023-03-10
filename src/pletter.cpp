@@ -9,6 +9,11 @@
 #include <QString>
 // #include <QDebug>
 #include <QMessageBox>
+#include <QtGlobal>
+
+#if QT_VERSION >= QT_VERSION_CHECK(5,14,0)
+#define endl Qt::endl
+#endif
 
 // REQUISITOS DE ENTRADA:
 //------------------------

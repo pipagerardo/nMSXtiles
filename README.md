@@ -13,3 +13,10 @@ En la carpeta "src" está el código del proyecto listo para ser usado con "qtcr
   - La carpeta "build" es la salida para el ejecutable.
   
 nMSXtiles es un proyecto original del programador Ramón de las Heras "pentacour", aunque esta versión está siendo desarrollada por "pipagerardo - @pipagerardo - pipagerardo@gmail.com" con la ayuda de "José García - Jos - @TessMSX"
+
+# Como compilarlo
+- Instalar Qt5 y qmake
+- cd src
+- qmake -o Makefile nmsxtiles.pro
+
+El binario estará disponible en el directorio de compilación `build`.

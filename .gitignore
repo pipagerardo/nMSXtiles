@@ -1,0 +1,8 @@
+obj/
+src/moc*.cpp
+src/moc_predefs.h
+src/ui*.h
+src/Makefile
+src/qrc_resources.cpp
+src/.qmake.stash
+build/
