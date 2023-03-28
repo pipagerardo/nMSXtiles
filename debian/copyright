@@ -1,0 +1,15 @@
+Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+
+Files: *
+Copyright: Ramon de las Heras Gomiz (rdelasheras@gmail.com)
+License: GPL-3
+ Screens, tiles and sprites editor for the MSX screen 2 and 4.
+
+Version by Gerardo Herce (pipagerardo@gmail.com) and Jose Garcia (Jos@TessMSX)
+
+https://github.com/pipagerardo/nMSXtiles
+
+nMSXtiles is licensed under the GNU LGPL v3 license.
+
+Pletter by XL2S Entertainment 2008
+

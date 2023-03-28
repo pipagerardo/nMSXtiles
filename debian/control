@@ -1,0 +1,11 @@
+Source: nmsxtiles
+Maintainer: Ramon de las Heras Gomiz <rdelasheras@gmail.com>
+Section: graphics
+Priority: optional
+Standards-Version: 3.9.3
+Build-Depends: debhelper (>= 8), qtbase5-dev, qtbase5-dev-tools, qt5-qmake
+
+Package: nmsxtiles
+Architecture: any
+Depends: libqt5gui5, libqt5widgets5, libqt5core5a, ${shlibs:Depends}, ${misc:Depends},
+Description: nMSXtiles - Screens, tiles and sprites editor for the MSX screen 2 and 4.

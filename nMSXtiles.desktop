@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Encoding=UTF-8
+Name=nMSXtiles
+Comment=Screens, tiles and sprites editor for the MSX screen 2 and 4.
+Exec=/usr/bin/nMSXtiles
+Icon=/usr/share/pixmaps/nMSXtiles.png
+Terminal=false
+Categories=GTK;GNOME;Graphics;Development;Game;Utility;
+
