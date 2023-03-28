@@ -4,6 +4,11 @@
 #include <QImage>
 #include <QFile>
 #include <QDebug>
+#include <QtGlobal>
+
+#if QT_VERSION >= QT_VERSION_CHECK(5,14,0)
+#define endl Qt::endl
+#endif
 
 CSpritesSet::CSpritesSet()
 {
@@ -109,9 +114,9 @@ void CSpritesW::Initialize()
 	connect( m_pSprites[2], SIGNAL( currentIndexChanged( int ) ), this, SLOT( OnCombos2Click( int ) ) );
 	connect( m_pSprites[3], SIGNAL( currentIndexChanged( int ) ), this, SLOT( OnCombos3Click( int ) ) );
 	connect( m_pGrFlipH,    SIGNAL( clicked() ), this, SLOT( OnFlipHClick() ) );
-    connect( m_pGrFlipV,    SIGNAL( clicked() ), this, SLOT( OnFlipVClick() ) );
-    connect( m_pGrShiftDown, SIGNAL( clicked() ), this, SLOT( OnShiftDownClick() ) );
-    connect( m_pGrShiftUp, SIGNAL( clicked() ), this, SLOT( OnShiftUpClick() ) );
+	connect( m_pGrFlipV,    SIGNAL( clicked() ), this, SLOT( OnFlipVClick() ) );
+	connect( m_pGrShiftDown, SIGNAL( clicked() ), this, SLOT( OnShiftDownClick() ) );
+	connect( m_pGrShiftUp, SIGNAL( clicked() ), this, SLOT( OnShiftUpClick() ) );
 
 	for( i = 1; i < 5; i++ ) m_pGrSets->addItem( QString( "Sprites Set %1" ).arg( i ) );
 	connect( m_pGrSets, SIGNAL( currentIndexChanged( int ) ), this, SLOT( OnSetsClick( int ) ) );
@@ -389,9 +394,16 @@ void CSpritesW::UpdateDesigner( int set, int sprite )
 {
 	int i;
 	QImage image;
+	QPixmap *pixmapPtr, pixmap;
 
-	
-    image = m_pLblSprites->pixmap()->toImage();
+#if QT_VERSION >= QT_VERSION_CHECK(5,14,0)
+       pixmap = m_pLblSprites->pixmap();
+       pixmapPtr = &pixmap;
+#else
+       pixmapPtr = (QPixmap *) m_pLblSprites->pixmap();
+#endif
+
+    image = pixmapPtr->toImage();
 
     CSupportFuncs::SetPixelRect( &image, 0, 0, BG_COLOR, 96*2, 96*2 );
     //
@@ -400,7 +412,13 @@ void CSpritesW::UpdateDesigner( int set, int sprite )
 	
 	m_pLblSprites->put_Image( image );
 	
-	image = m_pLblViews[set]->pixmap()->toImage();
+#if QT_VERSION >= QT_VERSION_CHECK(5,14,0)
+	pixmap = m_pLblViews[set]->pixmap();
+	pixmapPtr = &pixmap;
+#else
+	pixmapPtr = (QPixmap *) m_pLblViews[set]->pixmap();
+#endif
+	image = pixmapPtr->toImage();
 	
 	for( i = 0; i < 256; i++ ) UpdatePreview( set, sprite, i, false, &image );
 	
@@ -412,11 +430,17 @@ void CSpritesW::UpdateDesigner( int set, int sprite, int index, bool paintIsZ, Q
 	QImage image;
 	QImage *pTmp;
 	unsigned int color;
-	
+	QPixmap *pixmapPtr, pixmap;
 	
 	if( !pImage )
 	{
-		image = m_pLblSprites->pixmap()->toImage();
+#if QT_VERSION >= QT_VERSION_CHECK(5,14,0)
+		pixmap = m_pLblSprites->pixmap();
+		pixmapPtr = &pixmap;
+#else
+		pixmapPtr = (QPixmap *) m_pLblSprites->pixmap();
+#endif
+		image = pixmapPtr->toImage();
 		pTmp = &image;
 	}
 	else pTmp = pImage;
@@ -436,7 +460,7 @@ void CSpritesW::UpdatePreview()
     unsigned int color;
 
 
-//    image = m_pLblViews[0]->pixmap()->toImage();
+//    image = m_pLblViews[0]->pixmap().toImage();
 /*
     if( paintIsZ ) color = BG_COLOR; // COLORS_TABLE_SPRITES[0];
     else if( m_Sprites.at( set )->GetValue( sprite, index ) == 1 ) color = COLORS_TABLE_SPRITES[ m_Sprites.at( set )->GetColor( sprite ) ];
@@ -468,11 +492,17 @@ void CSpritesW::UpdatePreview( int set, int sprite, int index, bool paintIsZ, QI
 	QImage image;
 	QImage *pTmp;
 	unsigned int color;
-	
+	QPixmap *pixmapPtr, pixmap;
 
 	if( !pImage )
 	{
-		image = m_pLblViews[set]->pixmap()->toImage();
+#if QT_VERSION >= QT_VERSION_CHECK(5,14,0)
+		pixmap = m_pLblViews[set]->pixmap();
+		pixmapPtr = &pixmap;
+#else
+		pixmapPtr = (QPixmap *) m_pLblViews[set]->pixmap();
+#endif
+		image = pixmapPtr->toImage();
 		pTmp = &image;
 	}
 	else pTmp = pImage;	

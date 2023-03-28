@@ -10,6 +10,11 @@
 #include <QPixmap>
 #include <QString>
 #include <QMessageBox>
+#include <QtGlobal>
+
+#if QT_VERSION >= QT_VERSION_CHECK(5,14,0)
+#define endl Qt::endl
+#endif
 
 // extern int PletterMain( int dataSize, unsigned char *pData, QString destfilename );
 
@@ -1756,18 +1761,25 @@ void CScreenW::UpdateBank( int tile, int bank, bool updateScreen ) {
 }
 
 void CScreenW::InitBanks() {
-    for( int j = 0; j < 3; j++ ) {
-		m_BankImages[j] = m_pLblBank[j]->pixmap()->toImage();
+	QPixmap *pixmapPtr, pixmap;
+	for( int j = 0; j < 3; j++ ) {
+#if QT_VERSION >= QT_VERSION_CHECK(5,14,0)
+		pixmap = m_pLblBank[j]->pixmap();
+		pixmapPtr = &pixmap;
+#else
+		pixmapPtr = (QPixmap *) m_pLblBank[j]->pixmap();
+#endif
+		m_BankImages[j] = pixmapPtr->toImage();
 		PaintGrid( &m_BankImages[j], 16, 16 );
-        for( int i = 0; i < 256; i++ ) {
+		for( int i = 0; i < 256; i++ ) {
 			PaintTile( &m_BankImages[j], m_TilesBank[i][j], (i%32)*18+1, (i/32)*18+1, 2 );
 		}
 		m_pLblBank[j]->put_Image( m_BankImages[j] );
 	}
 	UpdateScreen();
-    if     ( m_LastBank == 0 ) OnBank0Click( m_LastBankX, m_LastBankY );
-    else if( m_LastBank == 1 ) OnBank1Click( m_LastBankX, m_LastBankY );
-    else                       OnBank2Click( m_LastBankX, m_LastBankY );
+	if     ( m_LastBank == 0 ) OnBank0Click( m_LastBankX, m_LastBankY );
+	else if( m_LastBank == 1 ) OnBank1Click( m_LastBankX, m_LastBankY );
+	else                       OnBank2Click( m_LastBankX, m_LastBankY );
 }
 
 // ---------------------------------------------------------------

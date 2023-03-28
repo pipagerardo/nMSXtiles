@@ -1,0 +1,11 @@
+nmsxtiles (0.9.5.1-3) bionic; urgency=low
+
+  * Original version Copyright (c) Ramón de las Heras (Pentacour) & Gerardo Herce (PipaGerardo)
+
+ -- Amaury Carvalho <amauryspires@gmail.com>  Mon, 11 Feb 2019 22:24:53 -0300
+
+nmsxtiles (0.9.5.1-3) bionic; urgency=low
+
+  * Fixed the source code to use the latest version of the Qt5 libraries
+
+ -- Pedro de Medeiros <pedro.medeiros@gmail.com>  Tue, 14 Mar 2023 12:36:14 -0300

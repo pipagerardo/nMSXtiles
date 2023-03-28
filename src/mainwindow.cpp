@@ -11,8 +11,13 @@
 #include <QMessageBox>
 #include <QTextStream>
 #include <QDebug>
+#include <QtGlobal>
 
-MainWindow::MainWindow(QWidget *parent) :   
+#if QT_VERSION >= QT_VERSION_CHECK(5,14,0)
+#define endl Qt::endl
+#endif
+
+MainWindow::MainWindow(QWidget *parent) :
     QMainWindow( parent ),
     ui( new Ui::MainWindow )
 {
@@ -330,7 +335,7 @@ void MainWindow::on_action_Screen_Import_SC2_triggered() {
     QString fileName;
     fileName = QFileDialog::getOpenFileName( this,
         "Screen - Import SC2", m_LastPathLoadProject,
-        "MSX screen 2 image (*.sc2);;All files (*.*)"
+        "MSX screen 2 image (*.sc2 *.SC2);;All files (*.*)"
     );
     if( fileName == "" ) return;
     m_LastPathLoadProject = fileName.left( fileName.lastIndexOf( "/" ) );
@@ -340,7 +345,7 @@ void MainWindow::on_action_Screen_Import_SC2_triggered() {
 void MainWindow::on_action_Screen_Export_SC2_triggered() {
     QString fileName = QFileDialog::getSaveFileName( this,
         "Screen - Export SC2", m_LastPathLoadProject,
-        "MSX screen 2 image (*.sc2);;All files (*.*)"
+        "MSX screen 2 image (*.sc2 *.SC2);;All files (*.*)"
     );
     if( fileName == "" ) return;
     m_LastPathLoadProject = fileName.left( fileName.lastIndexOf( "/" ) );
